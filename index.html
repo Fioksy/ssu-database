@@ -741,7 +741,7 @@
 
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
-        /* BIOS BOOT SCREEN: fullscreen overlay, black & white, bold monospace */
+        /* BIOS BOOT SCREEN: fullscreen overlay, centered, glowy */
         #boot-screen {
             position: fixed;
             inset: 0;
@@ -754,18 +754,54 @@
             z-index: 9999;
             box-sizing: border-box;
             overflow: hidden;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
 
+        /* CRT-ish glow / vignette over BIOS */
+        #boot-screen::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background:
+                radial-gradient(circle at 50% 10%, rgba(255,255,255,0.12), transparent 60%),
+                radial-gradient(circle at 50% 120%, rgba(0, 255, 160, 0.18), transparent 70%);
+            mix-blend-mode: screen;
+            opacity: 0.55;
+        }
+
+        /* BIOS log area */
         #boot-log {
+            position: relative;
             font-size: 13px;
             line-height: 1.4;
-            height: calc(100% - 52px);
-            overflow: hidden;
+            max-width: 80ch;
             white-space: pre;
+            overflow: hidden;
+            margin-bottom: 6px;
+            text-align: left;
+            text-shadow:
+                0 0 6px rgba(255,255,255,0.7),
+                0 0 14px rgba(160, 255, 200, 0.5),
+                0 0 22px rgba(70, 200, 140, 0.35);
+            animation: biosGlow 3.2s ease-in-out infinite alternate;
         }
 
+        .boot-line {
+            display: block;
+        }
+
+        .boot-line-center {
+            text-align: center;
+        }
+
+        /* Progress bar container */
         .bios-bar-container {
-            width: 100%;
+            width: 70%;
             border: 1px solid #888;
             height: 8px;
             margin-top: 8px;
@@ -781,11 +817,29 @@
             box-shadow: 0 0 6px rgba(255,255,255,0.5);
         }
 
+        /* BIOS status text */
         #bios-status {
-            margin-top: 6px;
+            margin-top: 8px;
             font-size: 11px;
             color: #cfcfcf;
             font-family: var(--bios-font);
+            text-shadow: 0 0 6px rgba(255,255,255,0.4);
+        }
+
+        /* Subtle glow pulse for boot text */
+        @keyframes biosGlow {
+            0% {
+                text-shadow:
+                    0 0 4px rgba(255,255,255,0.4),
+                    0 0 10px rgba(140, 240, 190, 0.3),
+                    0 0 18px rgba(40, 200, 120, 0.2);
+            }
+            100% {
+                text-shadow:
+                    0 0 8px rgba(255,255,255,0.9),
+                    0 0 18px rgba(180, 255, 210, 0.6),
+                    0 0 30px rgba(60, 255, 160, 0.4);
+            }
         }
 
         /* UPLINK OVERLAY */
@@ -1615,34 +1669,117 @@
         }
     }
 
-    // BIOS Boot Logic
+    // BIOS ASCII LOGO + Boot Logic
+
+    // ASCII LOGO BLOCK
+    const logoBlock = String.raw` +++++++++++++++++++++++++++++++++++++++++++++ 
+ +++++++++++++++++++++++++++++++++++++++++++++ 
+ ++++++++++++++++++++++ ++++++++++++++++++++++ 
+ +++++++++++++++++++++   +++++++++++++++++++++ 
+ +++++++++++++++++++++   +++++++++++++++++++++ 
+ ++++++   ++++++++++++   ++++++++++++   ++++++ 
+ ++++++     ++++++++++   ++++++++++     ++++++ 
+ ++++++      +++++++++   +++++++++      ++++++ 
+ ++++++  ++   ++++++++   ++++++++   ++  ++++++ 
+ ++++++  +++   +++++++   +++++++   +++  ++++++ 
+ ++++++  ++++  +++++++   +++++++  ++++  ++++++ 
+ ++++++  ++++   ++++++   ++++++   ++++  ++++++ 
+ ++++++  ++++   ++++++   ++++++   ++++  ++++++ 
+ ++++++  ++++   ++++++   ++++++   ++++  ++++++ 
+ ++++++  +++++  ++++++   ++++++   ++++  ++++++ 
+ ++++++  +++++  +++++     +++++  +++++  ++++++ 
+ ++++++  +++++   ++++     ++++   +++++  ++++++ 
+ ++++++  +++     +++   +   +++     +++  ++++++ 
+ ++++++  ++   ++++++  +++   +++++   ++  ++++++ 
+ ++++++      ++++++   +++   ++++++      ++++++ 
+ ++++++  ++    +++   +++++   +++    ++  ++++++ 
+ ++++++  ++++       +++++++        +++  ++++++ 
+ ++++++  +++++++               +++++++  ++++++ 
+ ++++++  +++++++   ++     ++   +++++++  ++++++ 
+ ++++++  +++++++   +++   +++   +++++++  ++++++ 
+ ++++++                                 ++++++ 
+ +++++++++++++++   +++   +++   +++++++++++++++ 
+ ++++++++++++++++   ++   ++   ++++++++++++++++ 
+  ++++++++++++++++   +   +    ++++++++++++++++ 
+   ++++++++++++++++         ++++++++++++++++   
+      ++++++++++++++       ++++++++++++++      
+           ++++++++++++ +++++++++++++          
+               ++++++++++++++++++              
+                   +++++++++                   
+                       +                       `;
+
+    const logoArt = logoBlock.trimEnd().split("\n");
+
+    const BOOT_MSG = "BOOTING UP FIELD TERMINAL...";
     const logArr = [
-"  █████  █████  ██   ██ ",
-" ██     ██      ██   ██ ",
-" ██     ██      ██   ██ ",
-"  █████  █████  ██   ██ ",
-"      ██     ██ ██   ██ ",
-" █████  █████    █████  ",
-" Security Service of Ukraine",
-"",
-"SSU FIELD TERMINAL - SenyaOS 4.6",
-"------------------------------------------------",
-"",
-"SYSTEM MEMORY CHECK ............. [OK]",
-"FLASH STORAGE .................... [OK]",
-"EXCLUSION ZONE MAP INDEX ........ [OK]",
-"UHF LINK (CH.12 / ENCRYPTED) .... [READY]",
-"",
-"BOOTING FIELD OPS SHELL..."
+        BOOT_MSG,
+        "",
+        ...logoArt,
+        "",
+        "SSU FIELD TERMINAL - SenyaOS 4.6",
+        "------------------------------------------------",
+        "",
+        "SYSTEM MEMORY CHECK ............. [OK]",
+        "FLASH STORAGE .................... [OK]",
+        "EXCLUSION ZONE MAP INDEX ........ [OK]",
+        "UHF LINK (CH.12 / ENCRYPTED) .... [READY]",
+        "",
+        "BOOTING FIELD OPS SHELL..."
     ];
+
+    const logoStartIndex = 2; // index in logArr where logo begins
+    const logoEndIndex = logoStartIndex + logoArt.length - 1;
+
     let idx = 0;
+    let bootSoundPlayed = false;
+
+    function playBootSound() {
+        try {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            const ctx = new AudioCtx();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+
+            osc.type = "square";
+            osc.frequency.value = 420; // chunky PDA beep
+
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+
+            gain.gain.setValueAtTime(0.2, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
+
+            osc.start();
+            osc.stop(ctx.currentTime + 0.3);
+        } catch (e) {
+            // silently ignore if blocked
+        }
+    }
 
     function boot() {
         const log = document.getElementById('boot-log');
+
+        // Play boot sound on first line
+        if (!bootSoundPlayed) {
+            playBootSound();
+            bootSoundPlayed = true;
+        }
+
         if (idx < logArr.length) {
-            log.textContent += logArr[idx] + "\n";
+            const line = logArr[idx];
+            const isLogoLine =
+                idx >= logoStartIndex &&
+                idx <= logoEndIndex &&
+                line.trim() !== "";
+
+            const div = document.createElement('div');
+            div.className = 'boot-line' + (isLogoLine ? ' boot-line-center' : '');
+            div.textContent = line;
+
+            log.appendChild(div);
             idx++;
-            setTimeout(boot, 180);
+            // Faster typing
+            setTimeout(boot, 90);
         } else {
             const bar = document.getElementById('bios-bar-fill');
             const statusEl = document.getElementById('bios-status');
@@ -1661,7 +1798,8 @@
             loadFromCloud(true).catch(() => {});
 
             const itv = setInterval(() => {
-                const step = 5 + Math.floor(Math.random() * 12);
+                // Faster progress
+                const step = 8 + Math.floor(Math.random() * 16);
                 p = Math.min(100, p + step);
                 bar.style.width = p + "%";
 
@@ -1674,9 +1812,9 @@
                     clearInterval(itv);
                     setTimeout(() => {
                         document.getElementById('boot-screen').style.display = 'none';
-                    }, 250);
+                    }, 200);
                 }
-            }, 120);
+            }, 90);
         }
     }
 

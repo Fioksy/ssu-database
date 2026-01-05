@@ -177,11 +177,12 @@
             transform-origin: center center;
         }
 
-        /* Chromatic aberration on key chrome only */
+        /* Chromatic aberration on key chrome only (tuned) */
         .chroma-soft {
             text-shadow:
-                -1px 0 0 rgba(255, 40, 40, 0.16),
-                 1px 0 0 rgba(0, 200, 255, 0.18);
+                -1.0px 0 0 rgba(255, 70, 70, 0.55),
+                 1.0px 0 0 rgba(0, 230, 255, 0.57),
+                 0 1.0px 0 rgba(0, 0, 0, 0.65);
         }
 
         /* Subtle screen noise overlay */
@@ -191,34 +192,96 @@
             border-radius: 10px;
             pointer-events: none;
             mix-blend-mode: soft-light;
-            opacity: 0.14;
+            opacity: 0.25;
             background-image:
                 repeating-linear-gradient(
                     0deg,
-                    rgba(255,255,255,0.05) 0px,
-                    rgba(255,255,255,0.05) 1px,
+                    rgba(255,255,255,0.06) 0px,
+                    rgba(255,255,255,0.06) 1px,
                     transparent 1px,
                     transparent 3px
                 ),
                 repeating-linear-gradient(
                     90deg,
-                    rgba(0,0,0,0.16) 0px,
-                    rgba(0,0,0,0.16) 1px,
+                    rgba(0,0,0,0.18) 0px,
+                    rgba(0,0,0,0.18) 1px,
                     transparent 1px,
                     transparent 4px
                 );
-            animation: noise-move 7s steps(10) infinite;
+            animation: noise-move 6s steps(8) infinite;
         }
 
         @keyframes noise-move {
             0%   { background-position: 0 0, 0 0; }
-            50%  { background-position: 14px 18px, -10px 16px; }
+            50%  { background-position: 18px 16px, -14px 18px; }
             100% { background-position: 0 0, 0 0; }
         }
 
-        /* Tiny glitch / tear effect */
+        /* Vignette around the LCD */
+        .screen-vignette {
+            position: absolute;
+            inset: 0;
+            border-radius: 12px;
+            pointer-events: none;
+            background:
+                radial-gradient(circle at 50% 35%,
+                    rgba(0,0,0,0) 0%,
+                    rgba(0,0,0,0) 42%,
+                    rgba(0,0,0,0.85) 100%);
+            mix-blend-mode: multiply;
+            opacity: 0.15;
+        }
+
+        /* Low signal brightness pulse overlay */
+        .low-signal-overlay {
+            position: absolute;
+            inset: 6px;
+            border-radius: 10px;
+            pointer-events: none;
+            background: radial-gradient(circle at 50% 10%,
+                rgba(170, 255, 200, 0.25),
+                rgba(0, 0, 0, 0.85));
+            mix-blend-mode: screen;
+            opacity: 0;
+        }
+
+        .low-signal-overlay.active {
+            animation: lowSignalPulse 3.5s ease-in-out infinite;
+        }
+
+        @keyframes lowSignalPulse {
+            0%, 100% { opacity: 0; }
+            50%      { opacity: 0.2; }
+        }
+
+        /* Backlight flicker overlay (weaker) */
+        .backlight-flicker {
+            position: absolute;
+            inset: 6px;
+            border-radius: 10px;
+            pointer-events: none;
+            background: radial-gradient(circle at 50% 20%,
+                rgba(255, 255, 255, 0.22),
+                rgba(0, 0, 0, 0.9));
+            mix-blend-mode: screen;
+            opacity: 0;
+        }
+
+        .backlight-flicker.active {
+            animation: backlightFlicker 0.7s ease-out;
+        }
+
+        @keyframes backlightFlicker {
+            0%   { opacity: 0; }
+            20%  { opacity: 0.32; }
+            40%  { opacity: 0.12; }
+            60%  { opacity: 0.2; }
+            100% { opacity: 0; }
+        }
+
+        /* Slight glitch / tear effect */
         .pda-os-frame.glitch {
-            animation: glitch-jitter 120ms ease-out;
+            animation: glitch-jitter 160ms ease-out;
         }
 
         .pda-os-frame.glitch::before,
@@ -230,11 +293,11 @@
             height: 14%;
             background: linear-gradient(
                 to bottom,
-                rgba(255,255,255,0.12),
-                rgba(0,0,0,0.3)
+                rgba(255,255,255,0.18),
+                rgba(0,0,0,0.35)
             );
             mix-blend-mode: screen;
-            opacity: 0.3;
+            opacity: 0.45;
             pointer-events: none;
         }
 
@@ -247,8 +310,8 @@
 
         @keyframes glitch-jitter {
             0%   { transform: translate(0, 0); }
-            30%  { transform: translate(1px, 0); }
-            60%  { transform: translate(-1px, 0); }
+            30%  { transform: translate(2px, 0); }
+            60%  { transform: translate(-2px, 0); }
             100% { transform: translate(0, 0); }
         }
 
@@ -485,8 +548,14 @@
             color: #aee4b8;
         }
 
-        /* Make Stalkers headers clickable for sorting */
-        #table-Stalkers thead th {
+        /* Actions column */
+        .actions-col {
+            width: 28px;
+            text-align: center;
+        }
+
+        /* Make Stalkers headers clickable for sorting (for first 4 only) */
+        #table-Stalkers thead th:not(.actions-col) {
             cursor: pointer;
             user-select: none;
         }
@@ -523,6 +592,34 @@
             box-shadow:
                 0 0 0 1px rgba(124, 220, 146, 0.7),
                 0 0 8px rgba(124, 220, 146, 0.5);
+        }
+
+        /* Delete row button */
+        .row-delete-btn {
+            width: 18px;
+            height: 18px;
+            border-radius: 3px;
+            border: 1px solid #3a2020;
+            background: radial-gradient(circle at 30% 30%, #7d2e2e 0, #3b1414 60%, #1a0505 100%);
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.05),
+                0 0 0 1px #000;
+            color: #ffb7b7;
+            font-size: 11px;
+            line-height: 1;
+            padding: 0;
+            cursor: pointer;
+        }
+
+        .row-delete-btn:hover {
+            background: radial-gradient(circle at 30% 30%, #a63c3c 0, #4a1818 60%, #1f0606 100%);
+        }
+
+        .row-delete-btn:active {
+            background: #2a0808;
+            box-shadow:
+                inset 0 0 4px rgba(0,0,0,0.8),
+                0 0 0 1px #000;
         }
 
         /* Column sizing tweaks for STALKERS table */
@@ -931,7 +1028,7 @@
                     <div class="title-icon"></div>
                     <div>
                         <div class="title-text-main">FIELD OPS PDA</div>
-                        <div class="title-text-sub">FIELD TERMINAL &mdash; CHORNOBYL EXCLUSION ZONE : SOUTH</div>
+                        <div class="title-text-sub">FIELD TERMINAL &mdash; CHORNOBYL EXCLUSION ZONE : NORTH</div>
                     </div>
                 </div>
                 <div class="title-right">
@@ -955,7 +1052,7 @@
                 <!-- Stalkers search/filter toolbar -->
                 <div id="stalker-toolbar" class="stalker-toolbar">
                     <span>FILTER:</span>
-                    <input type="text" id="stalker-search" placeholder="Search alias / task">
+                    <input type="text" id="stalker-search" placeholder="Search">
                 </div>
 
                 <table id="table-Personnel" class="active">
@@ -965,6 +1062,7 @@
                             <th>RANK</th>
                             <th>SPECIALISATION</th>
                             <th>STATUS</th>
+                            <th class="actions-col"></th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -977,6 +1075,7 @@
                             <th>STATUS</th>
                             <th>TASK</th>
                             <th>REPUTATION</th>
+                            <th class="actions-col"></th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -1013,11 +1112,14 @@
                         <span></span><span></span><span></span><span></span><span></span>
                     </span>
                     <span class="status-label">Uplink:</span>
-                    <span class="status-value">AGROPROM SAT-NET &bull; 92%</span>
+                    <span class="status-value">PRIPYAT SAT-NET &bull; 21%</span>
                 </div>
             </div>
 
-            <!-- Subtle screen noise overlay (on top of UI, under overlays) -->
+            <!-- Overlays for screen effects -->
+            <div class="screen-vignette"></div>
+            <div id="low-signal-overlay" class="low-signal-overlay"></div>
+            <div id="backlight-flicker" class="backlight-flicker"></div>
             <div class="screen-noise"></div>
         </div>
     </div>
@@ -1042,6 +1144,8 @@
 
     let currentSignal = 1;
     let signalBars = null;
+    let lowSignalOverlay = null;
+    let backlightOverlay = null;
 
     // Stalkers sorting state
     let stalkerSortState = {
@@ -1059,10 +1163,22 @@
                 else bar.classList.remove('active');
             }
         });
+
+        // Low signal brightness pulse when at 1 bar
+        if (lowSignalOverlay) {
+            if (currentSignal === 1) {
+                lowSignalOverlay.classList.add('active');
+            } else {
+                lowSignalOverlay.classList.remove('active');
+            }
+        }
     }
 
     function initSignalBars() {
         signalBars = document.querySelectorAll('.signal-bar span');
+        lowSignalOverlay = document.getElementById('low-signal-overlay');
+        backlightOverlay = document.getElementById('backlight-flicker');
+
         currentSignal = Math.random() < 0.7 ? 1 : 2;
         updateSignalBars();
 
@@ -1118,6 +1234,20 @@
         if (value === 'Wanted') {
             tr.classList.add('stalker-wanted');
         }
+    }
+
+    function attachDeleteHandler(tr, labelFieldIndex = 0) {
+        const btn = tr.querySelector('.row-delete-btn');
+        if (!btn) return;
+        btn.addEventListener('click', () => {
+            const labelInput = tr.querySelector(`td:nth-child(${labelFieldIndex + 1}) input`);
+            const label = labelInput && labelInput.value.trim()
+                ? labelInput.value.trim()
+                : 'this entry';
+            const ok = confirm(`Remove ${label}?`);
+            if (!ok) return;
+            tr.remove();
+        });
     }
 
     async function switchTab(tabName) {
@@ -1261,27 +1391,32 @@
         const tr = document.createElement('tr');
 
         if (currentTab === "Personnel") {
-            const data = rowData || ["", "Private", "", "Active"];
+            const data = rowData || ["", "Junior Sergeant", "", "Active"];
             const rawStatus = data[3] || "Active";
             const status = (rawStatus === "On Leave") ? "On Leave" : "Active";
 
             tr.innerHTML = `
                 <td><input type="text" placeholder="NAME" value="${data[0]}"></td>
-                <td>
-                    <select>
-                        <option ${data[1]=='Private'?'selected':''}>Private</option>
-                        <option ${data[1]=='Sergeant'?'selected':''}>Sergeant</option>
-                        <option ${data[1]=='Lieutenant'?'selected':''}>Lieutenant</option>
-                        <option ${data[1]=='Captain'?'selected':''}>Captain</option>
-                        <option ${data[1]=='Major'?'selected':''}>Major</option>
-                    </select>
-                </td>
-                <td><input type="text" placeholder="E.G. SCOUT, SNIPER, TECH" value="${data[2]}"></td>
+		<td>
+    			<select>
+        			<option ${data[1]=='Junior Sergeant'?'selected':''}>Junior Sergeant</option>
+        			<option ${data[1]=='Sergeant'?'selected':''}>Sergeant</option>
+        			<option ${data[1]=='Senior Sergeant'?'selected':''}>Senior Sergeant</option>
+        			<option ${data[1]=='Master Sergeant'?'selected':''}>Master Sergeant</option>
+        			<option ${data[1]=='Junior Lieutenant'?'selected':''}>Junior Lieutenant</option>
+        			<option ${data[1]=='Lieutenant'?'selected':''}>Lieutenant</option>
+        			<option ${data[1]=='Captain'?'selected':''}>Captain</option>
+    			</select>
+		</td>
+                <td><input type="text" placeholder="E.G. SNIPER, MEDIC, TECH" value="${data[2]}"></td>
                 <td>
                     <select>
                         <option ${status=='Active'?'selected':''}>Active</option>
                         <option ${status=='On Leave'?'selected':''}>On Leave</option>
                     </select>
+                </td>
+                <td class="actions-col" style="text-align:center;">
+                    <button type="button" class="row-delete-btn" title="Remove entry">&times;</button>
                 </td>
             `;
 
@@ -1290,6 +1425,8 @@
             statusSelect.addEventListener('change', function () {
                 updatePersonnelRowStyle(tr, this.value);
             });
+
+            attachDeleteHandler(tr, 0);
 
         } else if (currentTab === "Relations") {
             const data = rowData || ["", "Neutral", ""];
@@ -1337,6 +1474,9 @@
                         </div>
                     </div>
                 </td>
+                <td class="actions-col" style="text-align:center;">
+                    <button type="button" class="row-delete-btn" title="Remove entry">&times;</button>
+                </td>
             `;
 
             updateStalkerRowStyle(tr, status);
@@ -1356,6 +1496,8 @@
                 if (isNaN(v)) v = 0;
                 repInput.value = v - 100;
             });
+
+            attachDeleteHandler(tr, 0);
 
             // Re-apply filter if search active
             const searchInput = document.getElementById('stalker-search');
@@ -1459,7 +1601,7 @@
         if (stalkerHead) {
             stalkerHead.addEventListener('click', function (e) {
                 const th = e.target.closest('th');
-                if (!th) return;
+                if (!th || th.classList.contains('actions-col')) return;
                 const headers = Array.from(th.parentNode.children);
                 const idx = headers.indexOf(th);
                 if (idx === 0) {
@@ -1548,19 +1690,33 @@
         }, 500);
     }
 
-    // Glitch loop: very rare, very short
+    // Glitch loop
     function scheduleGlitch() {
         const frame = document.querySelector('.pda-os-frame');
         if (!frame) return;
 
-        const delay = 15000 + Math.random() * 15000; // 15–30s
+        const delay = 12000 + Math.random() * 12000; // 12–24s
         setTimeout(() => {
-            const boot = document.getElementById('boot-screen');
-            if (!boot || boot.style.display === 'none') {
+            const bootEl = document.getElementById('boot-screen');
+            if (!bootEl || bootEl.style.display === 'none') {
                 frame.classList.add('glitch');
-                setTimeout(() => frame.classList.remove('glitch'), 120);
+                setTimeout(() => frame.classList.remove('glitch'), 160);
             }
             scheduleGlitch();
+        }, delay);
+    }
+
+    // Backlight flicker loop
+    function scheduleBacklightFlicker() {
+        if (!backlightOverlay) return;
+        const delay = 8000 + Math.random() * 12000; // 8–20s
+        setTimeout(() => {
+            const bootEl = document.getElementById('boot-screen');
+            if (!bootEl || bootEl.style.display === 'none') {
+                backlightOverlay.classList.add('active');
+                setTimeout(() => backlightOverlay.classList.remove('active'), 800);
+            }
+            scheduleBacklightFlicker();
         }, delay);
     }
 
@@ -1570,6 +1726,7 @@
         initSignalBars();
         initStalkerControls();
         scheduleGlitch();
+        scheduleBacklightFlicker();
     });
 </script>
 </body>

@@ -5,17 +5,6 @@
     <title>Field PDA v4.6 - FIELD UNIT</title>
     <style>
         :root {
-            /* Shell / hardware */
-            --shell-base: #313738;
-            --shell-edge-dark: #141719;
-            --shell-edge-light: #545b5d;
-            --shell-screw: #1c2021;
-
-            /* Screen / OS */
-            --lcd-border: #050707;
-            --lcd-inner: #061012;
-            --lcd-glow: rgba(103, 175, 129, 0.1);
-
             /* UI colours (early 2000s OS vibe) */
             --os-bg: #1b2627;
             --os-panel: #202b2d;
@@ -49,115 +38,32 @@
             color: var(--os-text-main);
         }
 
-        /* RUGGED PDA CHASSIS */
+        /* PNG SHELL */
         .pda-chassis {
-            width: 900px;
-            height: 550px;
-            background: radial-gradient(circle at 20% 20%, #414849 0, #303637 50%, #1a1f20 100%);
-            border-radius: 32px;
-            padding: 20px 28px;
-            box-shadow:
-                0 45px 90px rgba(0,0,0,0.9),
-                inset 0 0 0 3px var(--shell-edge-dark),
-                inset 0 0 0 4px #000;
             position: relative;
+            width: 1024px;   /* native PNG size */
+            height: 702px;
+            background: url("pda_background.png") no-repeat center center;
+            background-size: contain;
             display: flex;
-            flex-direction: column;
-            overflow: hidden;
+            justify-content: center;
+            align-items: center;
         }
 
-        .pda-chassis::before,
-        .pda-chassis::after {
-            content: "";
-            position: absolute;
-            top: 18px;
-            bottom: 18px;
-            width: 10px;
-            border-radius: 999px;
-            background:
-                linear-gradient(to bottom, #222829, #111415 40%, #202628 60%, #131718 100%);
-            box-shadow: inset 0 0 0 1px #050708;
-        }
-
-        .pda-chassis::before { left: 8px; }
-        .pda-chassis::after  { right: 8px; }
-
-        .pda-screws {
-            position: absolute;
-            inset: 12px 20px auto 20px;
-            pointer-events: none;
-        }
-        .pda-screws::before,
-        .pda-screws::after {
-            content: "";
-            position: absolute;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, #687374 0, #303637 40%, #111516 100%);
-            box-shadow:
-                0 0 0 1px #000,
-                0 1px 0 rgba(255,255,255,0.1),
-                0 2px 3px rgba(0,0,0,0.7);
-        }
-        .pda-screws::before { left: 0; }
-        .pda-screws::after  { right: 0; }
-
-        .pda-label-strip {
-            position: absolute;
-            top: 16px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 2px 14px;
-            border-radius: 12px;
-            background: linear-gradient(to bottom, #51585a, #303536);
-            box-shadow:
-                inset 0 0 0 1px rgba(255,255,255,0.08),
-                0 1px 2px rgba(0,0,0,0.8);
-            font-size: 10px;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: #d5e8dd;
-        }
-
-        .pda-label-strip::before {
-            content: "FIELD PDA • ZONE OPERATIONS TERMINAL";
-        }
-
+        /* SCREEN AREA INSIDE SHELL */
         .pda-screen {
-            flex: 1 1 auto;
-            margin-top: 32px;
-            background: radial-gradient(circle at 20% 0%, rgba(255,255,255,0.1) 0, transparent 50%) #151a1b;
-            border-radius: 20px;
-            border: 4px solid #050707;
-            padding: 10px;
-            box-shadow:
-                inset 0 0 0 1px #262d2f,
-                inset 0 0 30px rgba(0,0,0,0.85);
-            position: relative;
+            position: absolute;
+            left: 85px;
+            top: 71px;
+            width: 808px;
+            height: 555px;
+            border-radius: 6px;
+            padding: 0;
+            background: transparent;
+            border: none;
+            overflow: hidden;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
-            min-height: 0;
-        }
-
-        .pda-screen::before {
-            content: "";
-            position: absolute;
-            inset: 6px;
-            border-radius: 12px;
-            background:
-                repeating-linear-gradient(
-                    to bottom,
-                    rgba(102, 162, 122, 0.06),
-                    rgba(102, 162, 122, 0.06) 1px,
-                    transparent 2px,
-                    transparent 3px
-                ),
-                radial-gradient(circle at top left, rgba(255,255,255,0.14), transparent 55%);
-            pointer-events: none;
-            mix-blend-mode: soft-light;
-            opacity: 0.8;
         }
 
         .pda-os-frame {
@@ -168,7 +74,7 @@
             flex: 1 1 auto;
             height: 100%;
             min-height: 0;
-            border-radius: 12px;
+            border-radius: 8px;
             overflow: hidden;
             background: radial-gradient(circle at 50% -40%, #344444 0, #151d1f 55%, #050809 100%);
             box-shadow:
@@ -177,7 +83,6 @@
             transform-origin: center center;
         }
 
-        /* Chromatic aberration on key chrome only (tuned) */
         .chroma-soft {
             text-shadow:
                 -1.0px 0 0 rgba(255, 70, 70, 0.55),
@@ -185,11 +90,10 @@
                  0 1.0px 0 rgba(0, 0, 0, 0.65);
         }
 
-        /* Subtle screen noise overlay */
         .screen-noise {
             position: absolute;
             inset: 6px;
-            border-radius: 10px;
+            border-radius: 6px;
             pointer-events: none;
             mix-blend-mode: soft-light;
             opacity: 0.25;
@@ -217,11 +121,10 @@
             100% { background-position: 0 0, 0 0; }
         }
 
-        /* Vignette around the LCD */
         .screen-vignette {
             position: absolute;
             inset: 0;
-            border-radius: 12px;
+            border-radius: 8px;
             pointer-events: none;
             background:
                 radial-gradient(circle at 50% 35%,
@@ -232,11 +135,10 @@
             opacity: 0.15;
         }
 
-        /* Low signal brightness pulse overlay */
         .low-signal-overlay {
             position: absolute;
             inset: 6px;
-            border-radius: 10px;
+            border-radius: 6px;
             pointer-events: none;
             background: radial-gradient(circle at 50% 10%,
                 rgba(170, 255, 200, 0.25),
@@ -246,19 +148,18 @@
         }
 
         .low-signal-overlay.active {
-            animation: lowSignalPulse 3.5s ease-in-out infinite;
+            animation: lowSignalPulse 20s ease-in-out infinite;
         }
 
         @keyframes lowSignalPulse {
             0%, 100% { opacity: 0; }
-            50%      { opacity: 0.2; }
+            20%      { opacity: 0.05; }
         }
 
-        /* Backlight flicker overlay (weaker) */
         .backlight-flicker {
             position: absolute;
             inset: 6px;
-            border-radius: 10px;
+            border-radius: 6px;
             pointer-events: none;
             background: radial-gradient(circle at 50% 20%,
                 rgba(255, 255, 255, 0.22),
@@ -273,13 +174,12 @@
 
         @keyframes backlightFlicker {
             0%   { opacity: 0; }
-            20%  { opacity: 0.32; }
-            40%  { opacity: 0.12; }
-            60%  { opacity: 0.2; }
+            20%  { opacity: 0.15; }
+            40%  { opacity: 0.07; }
+            60%  { opacity: 0.12; }
             100% { opacity: 0; }
         }
 
-        /* Slight glitch / tear effect */
         .pda-os-frame.glitch {
             animation: glitch-jitter 160ms ease-out;
         }
@@ -301,18 +201,25 @@
             pointer-events: none;
         }
 
-        .pda-os-frame.glitch::before {
-            top: 22%;
-        }
-        .pda-os-frame.glitch::after {
-            bottom: 18%;
-        }
+        .pda-os-frame.glitch::before { top: 22%; }
+        .pda-os-frame.glitch::after  { bottom: 18%; }
 
         @keyframes glitch-jitter {
             0%   { transform: translate(0, 0); }
             30%  { transform: translate(2px, 0); }
             60%  { transform: translate(-2px, 0); }
             100% { transform: translate(0, 0); }
+        }
+
+        .screen-cracks {
+            position: absolute;
+            inset: 6px;
+            border-radius: 6px;
+            pointer-events: none;
+            background: url("overlay.png") center/cover no-repeat;
+            mix-blend-mode: screen;
+            opacity: 0.08;
+            z-index: 9;
         }
 
         .title-bar {
@@ -344,6 +251,7 @@
             box-shadow: 0 0 6px rgba(161, 233, 179, 0.55);
             position: relative;
         }
+
         .title-icon::before,
         .title-icon::after {
             content: "";
@@ -352,6 +260,7 @@
             border-radius: 1px;
             border: 1px solid rgba(6,16,10,0.6);
         }
+
         .title-icon::after {
             inset: 5px 3px;
             border-color: rgba(140,230,162,0.5);
@@ -362,6 +271,7 @@
             letter-spacing: 0.08em;
             text-transform: uppercase;
         }
+
         .title-text-sub {
             font-size: 10px;
             color: var(--os-text-muted);
@@ -388,7 +298,6 @@
 
         #pda-clock { font-family: var(--bios-font); }
 
-        /* Icon button (refresh) */
         .icon-btn {
             width: 18px;
             height: 18px;
@@ -476,7 +385,7 @@
             flex: 1 1 auto;
             min-height: 0;
             margin: 6px;
-            border-radius: 8px;
+            border-radius: 6px;
             border: 1px solid #070b0c;
             box-shadow:
                 inset 0 0 0 1px #273133,
@@ -493,7 +402,6 @@
             border: 1px solid #05080a;
         }
 
-        /* Stalker search toolbar */
         .stalker-toolbar {
             padding: 4px 8px;
             background: rgba(5, 10, 11, 0.9);
@@ -548,13 +456,11 @@
             color: #aee4b8;
         }
 
-        /* Actions column */
         .actions-col {
             width: 28px;
             text-align: center;
         }
 
-        /* Make Stalkers headers clickable for sorting (for first 4 only) */
         #table-Stalkers thead th:not(.actions-col) {
             cursor: pointer;
             user-select: none;
@@ -594,7 +500,6 @@
                 0 0 8px rgba(124, 220, 146, 0.5);
         }
 
-        /* Delete row button */
         .row-delete-btn {
             width: 18px;
             height: 18px;
@@ -622,7 +527,6 @@
                 0 0 0 1px #000;
         }
 
-        /* Column sizing tweaks for STALKERS table */
         #table-Stalkers th:nth-child(3),
         #table-Stalkers td:nth-child(3) {
             width: 55%;
@@ -741,7 +645,17 @@
 
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
-        /* BIOS BOOT SCREEN: fullscreen overlay, centered, glowy */
+        /* BIOS COVER */
+        #boot-cover {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            z-index: 9998;
+            pointer-events: none;
+            display: none;
+        }
+
+        /* BIOS SCREEN */
         #boot-screen {
             position: fixed;
             inset: 0;
@@ -754,14 +668,12 @@
             z-index: 9999;
             box-sizing: border-box;
             overflow: hidden;
-
-            display: flex;
+            display: none;
             flex-direction: column;
             justify-content: center;
             align-items: center;
         }
 
-        /* CRT-ish glow / vignette over BIOS */
         #boot-screen::before {
             content: "";
             position: absolute;
@@ -774,11 +686,10 @@
             opacity: 0.55;
         }
 
-        /* BIOS log area */
         #boot-log {
             position: relative;
             font-size: 13px;
-            line-height: 1.4;
+            line-height: 1.2;
             max-width: 80ch;
             white-space: pre;
             overflow: hidden;
@@ -791,15 +702,18 @@
             animation: biosGlow 3.2s ease-in-out infinite alternate;
         }
 
-        .boot-line {
+        .boot-line { display: block; }
+
+        .boot-logo-block {
             display: block;
-        }
-
-        .boot-line-center {
+            margin: 4px auto 8px;
             text-align: center;
+            transform: scaleX(1.35) scaleY(0.8);
+            transform-origin: center center;
         }
 
-        /* Progress bar container */
+        .boot-logo-line { display: block; }
+
         .bios-bar-container {
             width: 70%;
             border: 1px solid #888;
@@ -817,7 +731,6 @@
             box-shadow: 0 0 6px rgba(255,255,255,0.5);
         }
 
-        /* BIOS status text */
         #bios-status {
             margin-top: 8px;
             font-size: 11px;
@@ -826,7 +739,6 @@
             text-shadow: 0 0 6px rgba(255,255,255,0.4);
         }
 
-        /* Subtle glow pulse for boot text */
         @keyframes biosGlow {
             0% {
                 text-shadow:
@@ -842,11 +754,118 @@
             }
         }
 
-        /* UPLINK OVERLAY */
+        /* START OVERLAY */
+        #start-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 10000;
+            background:
+                radial-gradient(circle at 50% 0%, rgba(40, 60, 60, 0.25), transparent 55%),
+                #020304;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .start-panel {
+            background: #050b0c;
+            border-radius: 10px;
+            border: 1px solid #263335;
+            box-shadow:
+                0 0 0 1px #000,
+                0 18px 40px rgba(0,0,0,0.9);
+            padding: 20px 26px 18px;
+            min-width: 220px;
+            text-align: center;
+            color: var(--os-text-main);
+            font-size: 11px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* NEW: mid-2000s style app icon using the UA flag image */
+        .start-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 10px;
+            padding: 4px;
+            background: linear-gradient(to bottom, #3b4c60, #1b2633);
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.12),
+                0 0 0 1px #000,
+                0 12px 22px rgba(0,0,0,0.85);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+
+        .start-icon-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
+            background: radial-gradient(circle at 30% 15%, rgba(255,255,255,0.4), transparent 50%);
+            overflow: hidden;
+        }
+
+        .start-icon-img {
+            position: absolute;
+            inset: 8px;
+            width: auto;
+            height: auto;
+            max-width: calc(100% - 16px);
+            max-height: calc(100% - 16px);
+            object-fit: contain;
+            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.6));
+        }
+
+        .start-icon-led {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            bottom: 7px;
+            right: 7px;
+            background: radial-gradient(circle at 30% 30%, #8cff9a 0, #2a5b31 70%, #041108 100%);
+            box-shadow:
+                0 0 3px rgba(150, 255, 180, 0.9),
+                0 0 8px rgba(80, 200, 120, 0.8);
+        }
+
+        #start-btn {
+            margin-top: 4px;
+            padding: 6px 18px;
+            border-radius: 5px;
+            border: 1px solid #1e292b;
+            background: linear-gradient(to bottom, #2f433f, #182626);
+            color: #d7f0de;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+            cursor: pointer;
+            box-shadow:
+                0 1px 0 rgba(255,255,255,0.08),
+                0 0 0 1px #000;
+        }
+
+        #start-btn:hover {
+            background: linear-gradient(to bottom, #37504a, #1b2d2b);
+        }
+
+        #start-btn:active {
+            background: #142021;
+            box-shadow:
+                inset 0 0 6px rgba(0,0,0,0.7),
+                0 0 0 1px #000;
+        }
+
         #uplink-overlay {
             position: absolute;
             inset: 6px;
-            border-radius: 8px;
+            border-radius: 6px;
             background: rgba(1,5,3,0.8);
             display: none;
             flex-direction: column;
@@ -882,11 +901,10 @@
             margin: 0 0 10px 0;
         }
 
-        /* ERROR OVERLAY */
         #error-overlay {
             position: absolute;
             inset: 6px;
-            border-radius: 8px;
+            border-radius: 6px;
             background: rgba(30, 0, 0, 0.85);
             display: none;
             flex-direction: column;
@@ -920,7 +938,6 @@
             font-family: var(--bios-font);
         }
 
-        /* FACTIONS highlighting only inside controls */
         #table-Relations tbody tr.relation-allied input,
         #table-Relations tbody tr.relation-allied select {
             background: radial-gradient(circle at 50% 0%, #3f6b4c 0, #18241c 80%);
@@ -958,7 +975,6 @@
             color: #f5eaea;
         }
 
-        /* PERSONNEL status highlighting only inside controls */
         #table-Personnel tbody tr.personnel-active input,
         #table-Personnel tbody tr.personnel-active select {
             background: radial-gradient(circle at 50% 0%, #3f6b4c 0, #18241c 80%);
@@ -977,7 +993,6 @@
                 0 0 0 1px rgba(0,0,0,0.8);
         }
 
-        /* STALKERS highlighting only inside controls for Wanted */
         #table-Stalkers tbody tr.stalker-wanted input,
         #table-Stalkers tbody tr.stalker-wanted select {
             background: radial-gradient(circle at 50% 0%, #6b3232 0, #2a1212 80%);
@@ -987,7 +1002,6 @@
                 0 0 0 1px rgba(0,0,0,0.8);
         }
 
-        /* Reputation controls */
         .rep-control {
             display: flex;
             align-items: center;
@@ -1025,13 +1039,8 @@
             cursor: pointer;
         }
 
-        .rep-btn-up {
-            color: #a3f7b4;
-        }
-
-        .rep-btn-down {
-            color: #ff8a8a;
-        }
+        .rep-btn-up   { color: #a3f7b4; }
+        .rep-btn-down { color: #ff8a8a; }
 
         .rep-control .rep-btn:hover {
             background: linear-gradient(to bottom, #2d3538, #171d1f);
@@ -1041,25 +1050,88 @@
             background: #13191b;
             box-shadow: inset 0 0 4px rgba(0,0,0,0.8);
         }
+
+        .screen-overlay {
+            position: absolute;
+            inset: 0;
+            border-radius: 6px;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .screen-dirt {
+            mix-blend-mode: multiply;
+            background:
+                radial-gradient(circle at 20% 10%, rgba(255,255,255,0.05), transparent 60%),
+                radial-gradient(circle at 80% 90%, rgba(0,0,0,0.35), transparent 70%);
+            opacity: 0.12;
+        }
+
+        .screen-scratches {
+            mix-blend-mode: screen;
+            background:
+                repeating-linear-gradient(
+                    120deg,
+                    rgba(255,255,255,0.08) 0px,
+                    rgba(255,255,255,0.08) 1px,
+                    transparent 3px,
+                    transparent 8px
+                );
+            opacity: 0.06;
+        }
+
+        @keyframes pdaBootIn {
+            0% {
+                opacity: 0.0;
+                transform: scale(0.97) translateY(6px);
+                filter: blur(2px);
+            }
+            60% {
+                opacity: 1;
+                transform: scale(1.01) translateY(0);
+                filter: blur(0.5px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+                filter: blur(0);
+            }
+        }
+
+        .pda-os-frame.pda-appear {
+            animation: pdaBootIn 420ms ease-out;
+        }
     </style>
 </head>
 <body>
 
-<div class="pda-chassis">
-    <div class="pda-screws"></div>
-    <div class="pda-label-strip"></div>
+<!-- START / LAUNCH OVERLAY -->
+<div id="start-overlay">
+    <div class="start-panel">
+        <div class="start-icon">
+            <div class="start-icon-inner">
+                <img src="ua_flag.png" alt="Database Icon" class="start-icon-img">
+            </div>
+            <div class="start-icon-led"></div>
+        </div>
+        <button id="start-btn">LAUNCH DATABASE</button>
+    </div>
+</div>
 
+<!-- BIOS black cover + boot overlay -->
+<div id="boot-cover"></div>
+
+<div id="boot-screen">
+    <div id="boot-log"></div>
+    <div class="bios-bar-container">
+        <div id="bios-bar-fill"></div>
+    </div>
+    <div id="bios-status">INITIALIZING...</div>
+</div>
+
+<div class="pda-chassis">
     <div class="pda-screen">
         <div class="pda-os-frame">
-            <!-- BIOS boot overlay (fullscreen) -->
-            <div id="boot-screen">
-                <div id="boot-log"></div>
-                <div class="bios-bar-container">
-                    <div id="bios-bar-fill"></div>
-                </div>
-                <div id="bios-status">INITIALIZING...</div>
-            </div>
-
             <!-- UPLINK overlay -->
             <div id="uplink-overlay">
                 <div>
@@ -1103,7 +1175,6 @@
 
             <!-- MAIN DATA VIEWPORT -->
             <div class="viewport">
-                <!-- Stalkers search/filter toolbar -->
                 <div id="stalker-toolbar" class="stalker-toolbar">
                     <span>FILTER:</span>
                     <input type="text" id="stalker-search" placeholder="Search">
@@ -1170,12 +1241,19 @@
                 </div>
             </div>
 
-            <!-- Overlays for screen effects -->
+            <!-- internal screen effects -->
             <div class="screen-vignette"></div>
             <div id="low-signal-overlay" class="low-signal-overlay"></div>
             <div id="backlight-flicker" class="backlight-flicker"></div>
             <div class="screen-noise"></div>
         </div>
+
+        <!-- cracked glass overlay -->
+        <div class="screen-cracks"></div>
+
+        <!-- GLASS GRIME OVERLAYS -->
+        <div class="screen-overlay screen-dirt"></div>
+        <div class="screen-overlay screen-scratches"></div>
     </div>
 </div>
 
@@ -1183,29 +1261,85 @@
     const UPLINK_URL = "https://script.google.com/macros/s/AKfycbyqfwn91pnhsTSG2mlPIG1X9OSpPwnnk_ur3JtpOMtxzwVR1I4iR4jFwxEgSj2Xg_VR/exec";
     let currentTab = "Personnel";
 
-    // In-memory cache & per-sheet revision
-    const sheetCache = {
-        Personnel: null,
-        Stalkers: null,
-        Relations: null
-    };
-
-    const sheetRevision = {
-        Personnel: null,
-        Stalkers: null,
-        Relations: null
-    };
+    const sheetCache = { Personnel: null, Stalkers: null, Relations: null };
+    const sheetRevision = { Personnel: null, Stalkers: null, Relations: null };
 
     let currentSignal = 1;
     let signalBars = null;
     let lowSignalOverlay = null;
     let backlightOverlay = null;
 
-    // Stalkers sorting state
-    let stalkerSortState = {
-        column: null,  // 'alias' | 'status' | 'rep'
-        direction: 'asc'
-    };
+    let stalkerSortState = { column: null, direction: 'asc' };
+
+    function getAudioCtx() {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return null;
+        if (!window._pdaAudioCtx) {
+            window._pdaAudioCtx = new AudioCtx();
+        }
+        return window._pdaAudioCtx;
+    }
+
+    function playBootSound() {
+        const ctx = getAudioCtx();
+        if (!ctx) return;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        osc.type = "square";
+        osc.frequency.value = 420;
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        const now = ctx.currentTime;
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+
+        osc.start(now);
+        osc.stop(now + 0.3);
+    }
+
+    function playBootChime() {
+        const ctx = getAudioCtx();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+
+        function note(freq, start, dur, vol) {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(freq, now + start);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            gain.gain.setValueAtTime(vol, now + start);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + start + dur);
+            osc.start(now + start);
+            osc.stop(now + start + dur + 0.05);
+        }
+
+        note(740, 0.00, 0.20, 0.15);
+        note(1040, 0.16, 0.22, 0.13);
+    }
+
+    function playTabClick() {
+        const ctx = getAudioCtx();
+        if (!ctx) return;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        osc.type = "square";
+        osc.frequency.value = 2100;
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        const now = ctx.currentTime;
+        gain.gain.setValueAtTime(0.05, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+
+        osc.start(now);
+        osc.stop(now + 0.06);
+    }
 
     function updateSignalBars() {
         if (!signalBars) return;
@@ -1218,13 +1352,9 @@
             }
         });
 
-        // Low signal brightness pulse when at 1 bar
         if (lowSignalOverlay) {
-            if (currentSignal === 1) {
-                lowSignalOverlay.classList.add('active');
-            } else {
-                lowSignalOverlay.classList.remove('active');
-            }
+            if (currentSignal === 1) lowSignalOverlay.classList.add('active');
+            else lowSignalOverlay.classList.remove('active');
         }
     }
 
@@ -1249,45 +1379,32 @@
     function showErrorOverlay(message) {
         const overlay = document.getElementById('error-overlay');
         const textEl = document.getElementById('error-text');
-        if (message) {
-            textEl.innerHTML = message;
-        } else {
-            textEl.innerHTML = "ERROR 404 &mdash; REMOTE CHANGES DETECTED";
-        }
+        textEl.innerHTML = message || "ERROR 404 &mdash; REMOTE CHANGES DETECTED";
 
         currentSignal = 0;
         updateSignalBars();
 
         overlay.style.display = 'flex';
-        setTimeout(() => {
-            overlay.style.display = 'none';
-        }, 2300);
+        setTimeout(() => { overlay.style.display = 'none'; }, 2300);
     }
 
     function updatePersonnelRowStyle(tr, value) {
         tr.classList.remove('personnel-active', 'personnel-onleave');
-        if (value === 'On Leave') {
-            tr.classList.add('personnel-onleave');
-        } else if (value === 'Active') {
-            tr.classList.add('personnel-active');
-        }
+        if (value === 'On Leave') tr.classList.add('personnel-onleave');
+        else if (value === 'Active') tr.classList.add('personnel-active');
     }
 
     function updateRelationRowStyle(tr, value) {
         tr.classList.remove('relation-allied', 'relation-neutral', 'relation-hostile', 'relation-war');
-        switch (value) {
-            case 'Allied':  tr.classList.add('relation-allied');  break;
-            case 'Neutral': tr.classList.add('relation-neutral'); break;
-            case 'Hostile': tr.classList.add('relation-hostile'); break;
-            case 'War':     tr.classList.add('relation-war');     break;
-        }
+        if      (value === 'Allied')  tr.classList.add('relation-allied');
+        else if (value === 'Neutral') tr.classList.add('relation-neutral');
+        else if (value === 'Hostile') tr.classList.add('relation-hostile');
+        else if (value === 'War')     tr.classList.add('relation-war');
     }
 
     function updateStalkerRowStyle(tr, value) {
         tr.classList.remove('stalker-wanted');
-        if (value === 'Wanted') {
-            tr.classList.add('stalker-wanted');
-        }
+        if (value === 'Wanted') tr.classList.add('stalker-wanted');
     }
 
     function attachDeleteHandler(tr, labelFieldIndex = 0) {
@@ -1298,24 +1415,22 @@
             const label = labelInput && labelInput.value.trim()
                 ? labelInput.value.trim()
                 : 'this entry';
-            const ok = confirm(`Remove ${label}?`);
-            if (!ok) return;
+            if (!confirm(`Remove ${label}?`)) return;
             tr.remove();
         });
     }
 
     async function switchTab(tabName) {
+        playTabClick();
         currentTab = tabName;
+
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         document.getElementById('btn-' + tabName).classList.add('active');
         document.querySelectorAll('table').forEach(t => t.classList.remove('active'));
         document.getElementById('table-' + tabName).classList.add('active');
 
-        // Toggle stalker toolbar visibility
         const toolbar = document.getElementById('stalker-toolbar');
-        if (toolbar) {
-            toolbar.style.display = (tabName === 'Stalkers') ? 'flex' : 'none';
-        }
+        if (toolbar) toolbar.style.display = (tabName === 'Stalkers') ? 'flex' : 'none';
 
         await loadFromCloud();
     }
@@ -1327,7 +1442,6 @@
             body.innerHTML = "";
             sheetCache[currentTab].forEach(rowData => renderRow(rowData));
             document.getElementById('sync-status').innerText = "CACHED";
-            // Re-apply filter if in stalkers
             if (currentTab === 'Stalkers') applyStalkerFilter();
             return;
         }
@@ -1354,9 +1468,7 @@
                 updateSignalBars();
             }
 
-            if (currentTab === 'Stalkers') {
-                applyStalkerFilter();
-            }
+            if (currentTab === 'Stalkers') applyStalkerFilter();
 
         } catch (e) {
             document.getElementById('sync-status').innerText = "OFFLINE";
@@ -1366,15 +1478,12 @@
     }
 
     async function saveToCloud() {
-        // Block committing Stalker entries with empty alias
         if (currentTab === "Stalkers") {
             const stalkerRows = Array.from(document.querySelectorAll('#table-Stalkers tbody tr'));
             let hasMissingAlias = false;
             stalkerRows.forEach(tr => {
                 const aliasInput = tr.querySelector('td:nth-child(1) input');
-                if (!aliasInput || !aliasInput.value.trim()) {
-                    hasMissingAlias = true;
-                }
+                if (!aliasInput || !aliasInput.value.trim()) hasMissingAlias = true;
             });
             if (hasMissingAlias) {
                 document.getElementById('sync-status').innerText = "ALIAS MISSING";
@@ -1385,9 +1494,9 @@
 
         document.getElementById('uplink-overlay').style.display = 'flex';
 
-        const rows = Array.from(document.querySelectorAll(`#table-${currentTab} tbody tr`)).map(tr => {
-            return Array.from(tr.querySelectorAll('input, select')).map(el => el.value);
-        });
+        const rows = Array.from(document.querySelectorAll(`#table-${currentTab} tbody tr`)).map(tr =>
+            Array.from(tr.querySelectorAll('input, select')).map(el => el.value)
+        );
 
         try {
             const response = await fetch(UPLINK_URL, {
@@ -1401,9 +1510,8 @@
 
             const replyText = await response.text();
             let reply;
-            try {
-                reply = JSON.parse(replyText);
-            } catch (e) {
+            try { reply = JSON.parse(replyText); }
+            catch (e) {
                 document.getElementById('sync-status').innerText = "UPLINK OK";
                 sheetCache[currentTab] = rows;
                 return;
@@ -1411,16 +1519,12 @@
 
             if (reply.status === "CONFLICT") {
                 document.getElementById('sync-status').innerText = "CONFLICT - RELOADING";
-                if (typeof reply.revision !== "undefined") {
-                    sheetRevision[currentTab] = reply.revision;
-                }
+                if (typeof reply.revision !== "undefined") sheetRevision[currentTab] = reply.revision;
                 showErrorOverlay("ERROR 404 &mdash; REMOTE CHANGES DETECTED<br>RELOADING FROM UPLINK...");
                 await loadFromCloud(true);
             } else if (reply.status === "OK") {
                 sheetCache[currentTab] = rows;
-                if (typeof reply.revision !== "undefined") {
-                    sheetRevision[currentTab] = reply.revision;
-                }
+                if (typeof reply.revision !== "undefined") sheetRevision[currentTab] = reply.revision;
                 document.getElementById('sync-status').innerText = "LOCAL + REMOTE";
 
                 if (currentSignal === 0) {
@@ -1451,17 +1555,17 @@
 
             tr.innerHTML = `
                 <td><input type="text" placeholder="NAME" value="${data[0]}"></td>
-		<td>
-    			<select>
-        			<option ${data[1]=='Junior Sergeant'?'selected':''}>Junior Sergeant</option>
-        			<option ${data[1]=='Sergeant'?'selected':''}>Sergeant</option>
-        			<option ${data[1]=='Senior Sergeant'?'selected':''}>Senior Sergeant</option>
-        			<option ${data[1]=='Master Sergeant'?'selected':''}>Master Sergeant</option>
-        			<option ${data[1]=='Junior Lieutenant'?'selected':''}>Junior Lieutenant</option>
-        			<option ${data[1]=='Lieutenant'?'selected':''}>Lieutenant</option>
-        			<option ${data[1]=='Captain'?'selected':''}>Captain</option>
-    			</select>
-		</td>
+                <td>
+                    <select>
+                        <option ${data[1]=='Junior Sergeant'?'selected':''}>Junior Sergeant</option>
+                        <option ${data[1]=='Sergeant'?'selected':''}>Sergeant</option>
+                        <option ${data[1]=='Senior Sergeant'?'selected':''}>Senior Sergeant</option>
+                        <option ${data[1]=='Master Sergeant'?'selected':''}>Master Sergeant</option>
+                        <option ${data[1]=='Junior Lieutenant'?'selected':''}>Junior Lieutenant</option>
+                        <option ${data[1]=='Lieutenant'?'selected':''}>Lieutenant</option>
+                        <option ${data[1]=='Captain'?'selected':''}>Captain</option>
+                    </select>
+                </td>
                 <td><input type="text" placeholder="E.G. SNIPER, MEDIC, TECH" value="${data[2]}"></td>
                 <td>
                     <select>
@@ -1553,7 +1657,6 @@
 
             attachDeleteHandler(tr, 0);
 
-            // Re-apply filter if search active
             const searchInput = document.getElementById('stalker-search');
             if (searchInput && searchInput.value.trim() !== '') {
                 applyStalkerFilter();
@@ -1574,30 +1677,18 @@
 
     function addNewRow() { renderRow(); }
 
-    /* STALKERS FILTERING + SORTING */
-
     function applyStalkerFilter() {
         const input = document.getElementById('stalker-search');
         if (!input) return;
         const q = input.value.toLowerCase().trim();
-
         const tbody = document.querySelector('#table-Stalkers tbody');
         if (!tbody) return;
-
         const rows = Array.from(tbody.querySelectorAll('tr'));
         rows.forEach(tr => {
-            if (!q) {
-                tr.style.display = '';
-                return;
-            }
+            if (!q) { tr.style.display = ''; return; }
             const alias = (tr.querySelector('td:nth-child(1) input')?.value || '').toLowerCase();
-            const task = (tr.querySelector('td:nth-child(3) input')?.value || '').toLowerCase();
-
-            if (alias.includes(q) || task.includes(q)) {
-                tr.style.display = '';
-            } else {
-                tr.style.display = 'none';
-            }
+            const task  = (tr.querySelector('td:nth-child(3) input')?.value || '').toLowerCase();
+            tr.style.display = (alias.includes(q) || task.includes(q)) ? '' : 'none';
         });
     }
 
@@ -1616,7 +1707,6 @@
     function sortStalkers(by) {
         const tbody = document.querySelector('#table-Stalkers tbody');
         if (!tbody) return;
-
         const rows = Array.from(tbody.querySelectorAll('tr'));
         if (!rows.length) return;
 
@@ -1629,16 +1719,13 @@
         rows.sort((a, b) => {
             const va = getStalkerSortValue(a, by);
             const vb = getStalkerSortValue(b, by);
-
             let cmp = 0;
             if (typeof va === 'number' && typeof vb === 'number') {
                 cmp = va - vb;
             } else {
                 if (va < vb) cmp = -1;
                 else if (va > vb) cmp = 1;
-                else cmp = 0;
             }
-
             return direction === 'asc' ? cmp : -cmp;
         });
 
@@ -1647,9 +1734,7 @@
 
     function initStalkerControls() {
         const searchInput = document.getElementById('stalker-search');
-        if (searchInput) {
-            searchInput.addEventListener('input', applyStalkerFilter);
-        }
+        if (searchInput) searchInput.addEventListener('input', applyStalkerFilter);
 
         const stalkerHead = document.querySelector('#table-Stalkers thead');
         if (stalkerHead) {
@@ -1658,20 +1743,13 @@
                 if (!th || th.classList.contains('actions-col')) return;
                 const headers = Array.from(th.parentNode.children);
                 const idx = headers.indexOf(th);
-                if (idx === 0) {
-                    sortStalkers('alias');
-                } else if (idx === 1) {
-                    sortStalkers('status');
-                } else if (idx === 3) {
-                    sortStalkers('rep');
-                }
+                if (idx === 0)      sortStalkers('alias');
+                else if (idx === 1) sortStalkers('status');
+                else if (idx === 3) sortStalkers('rep');
             });
         }
     }
 
-    // BIOS ASCII LOGO + Boot Logic
-
-    // ASCII LOGO BLOCK
     const logoBlock = String.raw` +++++++++++++++++++++++++++++++++++++++++++++ 
  +++++++++++++++++++++++++++++++++++++++++++++ 
  ++++++++++++++++++++++ ++++++++++++++++++++++ 
@@ -1727,95 +1805,102 @@
         "BOOTING FIELD OPS SHELL..."
     ];
 
-    const logoStartIndex = 2; // index in logArr where logo begins
+    const logoStartIndex = 2;
     const logoEndIndex = logoStartIndex + logoArt.length - 1;
 
-    let idx = 0;
+    let idxBoot = 0;
     let bootSoundPlayed = false;
-
-    function playBootSound() {
-        try {
-            const AudioCtx = window.AudioContext || window.webkitAudioContext;
-            const ctx = new AudioCtx();
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-
-            osc.type = "square";
-            osc.frequency.value = 420; // chunky PDA beep
-
-            osc.connect(gain);
-            gain.connect(ctx.destination);
-
-            gain.gain.setValueAtTime(0.2, ctx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
-
-            osc.start();
-            osc.stop(ctx.currentTime + 0.3);
-        } catch (e) {
-            // silently ignore if blocked
-        }
-    }
+    let logoWrapper = null;
 
     function boot() {
         const log = document.getElementById('boot-log');
+        log.innerHTML = "";
+        idxBoot = 0;
+        logoWrapper = null;
 
-        // Play boot sound on first line
         if (!bootSoundPlayed) {
+            const ctx = getAudioCtx();
+            if (ctx && ctx.state === "suspended") ctx.resume().catch(()=>{});
             playBootSound();
             bootSoundPlayed = true;
         }
 
-        if (idx < logArr.length) {
-            const line = logArr[idx];
-            const isLogoLine =
-                idx >= logoStartIndex &&
-                idx <= logoEndIndex &&
-                line.trim() !== "";
+        function stepLines() {
+            if (idxBoot < logArr.length) {
+                const line = logArr[idxBoot];
+                const isLogoLine =
+                    idxBoot >= logoStartIndex &&
+                    idxBoot <= logoEndIndex &&
+                    line.trim() !== "";
 
-            const div = document.createElement('div');
-            div.className = 'boot-line' + (isLogoLine ? ' boot-line-center' : '');
-            div.textContent = line;
-
-            log.appendChild(div);
-            idx++;
-            // Faster typing
-            setTimeout(boot, 90);
-        } else {
-            const bar = document.getElementById('bios-bar-fill');
-            const statusEl = document.getElementById('bios-status');
-
-            const phases = [
-                { limit: 20, text: "SCANNING MEMORY MAP" },
-                { limit: 45, text: "MOUNTING FIELD DATABASE" },
-                { limit: 70, text: "LINKING RADIO MODULE" },
-                { limit: 90, text: "APPLYING ZONE OVERRIDES" },
-                { limit: 100, text: "HANDING OFF TO OS" }
-            ];
-
-            let phaseIndex = 0;
-            let p = 0;
-
-            loadFromCloud(true).catch(() => {});
-
-            const itv = setInterval(() => {
-                // Faster progress
-                const step = 8 + Math.floor(Math.random() * 16);
-                p = Math.min(100, p + step);
-                bar.style.width = p + "%";
-
-                if (phaseIndex < phases.length && p >= phases[phaseIndex].limit) {
-                    statusEl.textContent = phases[phaseIndex].text + "...";
-                    phaseIndex++;
+                if (isLogoLine) {
+                    if (!logoWrapper) {
+                        logoWrapper = document.createElement('div');
+                        logoWrapper.className = 'boot-logo-block';
+                        log.appendChild(logoWrapper);
+                    }
+                    const div = document.createElement('div');
+                    div.className = 'boot-line boot-logo-line';
+                    div.textContent = line;
+                    logoWrapper.appendChild(div);
+                } else {
+                    const div = document.createElement('div');
+                    div.className = 'boot-line';
+                    div.textContent = line;
+                    log.appendChild(div);
                 }
 
-                if (p >= 100) {
-                    clearInterval(itv);
-                    setTimeout(() => {
-                        document.getElementById('boot-screen').style.display = 'none';
-                    }, 200);
-                }
-            }, 90);
+                idxBoot++;
+                setTimeout(stepLines, 90);
+            } else {
+                const bar = document.getElementById('bios-bar-fill');
+                const statusEl = document.getElementById('bios-status');
+
+                const phases = [
+                    { limit: 20, text: "SCANNING MEMORY MAP" },
+                    { limit: 45, text: "MOUNTING FIELD DATABASE" },
+                    { limit: 70, text: "LINKING RADIO MODULE" },
+                    { limit: 90, text: "APPLYING ZONE OVERRIDES" },
+                    { limit: 100, text: "HANDING OFF TO OS" }
+                ];
+
+                let phaseIndex = 0;
+                let p = 0;
+
+                loadFromCloud(true).catch(() => {});
+
+                const itv = setInterval(() => {
+                    const step = 8 + Math.floor(Math.random() * 16);
+                    p = Math.min(100, p + step);
+                    bar.style.width = p + "%";
+
+                    if (phaseIndex < phases.length && p >= phases[phaseIndex].limit) {
+                        statusEl.textContent = phases[phaseIndex].text + "...";
+                        phaseIndex++;
+                    }
+
+                    if (p >= 100) {
+                        clearInterval(itv);
+                        setTimeout(() => {
+                            const bootEl = document.getElementById('boot-screen');
+                            if (bootEl) bootEl.style.display = 'none';
+                            const cover = document.getElementById('boot-cover');
+                            if (cover) cover.style.display = 'none';
+
+                            playBootChime();
+
+                            const frame = document.querySelector('.pda-os-frame');
+                            if (frame) {
+                                frame.classList.add('pda-appear');
+                                setTimeout(() => frame.classList.remove('pda-appear'), 500);
+                            }
+                        }, 200);
+                    }
+                }, 90);
+            }
         }
+
+        stepLines();
     }
 
     function initClock() {
@@ -1828,12 +1913,10 @@
         }, 500);
     }
 
-    // Glitch loop
     function scheduleGlitch() {
         const frame = document.querySelector('.pda-os-frame');
         if (!frame) return;
-
-        const delay = 12000 + Math.random() * 12000; // 12–24s
+        const delay = 12000 + Math.random() * 12000;
         setTimeout(() => {
             const bootEl = document.getElementById('boot-screen');
             if (!bootEl || bootEl.style.display === 'none') {
@@ -1844,10 +1927,9 @@
         }, delay);
     }
 
-    // Backlight flicker loop
     function scheduleBacklightFlicker() {
         if (!backlightOverlay) return;
-        const delay = 8000 + Math.random() * 12000; // 8–20s
+        const delay = 8000 + Math.random() * 12000;
         setTimeout(() => {
             const bootEl = document.getElementById('boot-screen');
             if (!bootEl || bootEl.style.display === 'none') {
@@ -1858,13 +1940,30 @@
         }, delay);
     }
 
-    window.addEventListener('load', () => {
+    function startPDA() {
+        const startOverlay = document.getElementById('start-overlay');
+        if (startOverlay) startOverlay.style.display = 'none';
+
+        const cover = document.getElementById('boot-cover');
+        const bootEl = document.getElementById('boot-screen');
+        if (cover) cover.style.display = 'block';
+        if (bootEl) bootEl.style.display = 'flex';
+
+        const ctx = getAudioCtx();
+        if (ctx && ctx.state === "suspended") ctx.resume().catch(()=>{});
+
         boot();
+    }
+
+    window.addEventListener('load', () => {
         initClock();
         initSignalBars();
         initStalkerControls();
         scheduleGlitch();
         scheduleBacklightFlicker();
+
+        const startBtn = document.getElementById('start-btn');
+        if (startBtn) startBtn.addEventListener('click', startPDA);
     });
 </script>
 </body>

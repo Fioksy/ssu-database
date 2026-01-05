@@ -2,23 +2,20 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>SSU-TACTICAL-UPLINK-v3.6</title>
+    <title>SSU PDA v4.0 - FIELD UNIT</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap');
-
         :root {
-            --win-gray: #c0c0c0;
-            --win-dark: #808080;
-            --win-light: #ffffff;
-            --win-shadow: #404040;
-            --win-blue: #000080; /* Classic Win95 Blue */
-            --military-bg: #2b2e2b;
+            --pda-silver: #d4d4d4;
+            --pda-dark-silver: #a0a0a0;
+            --pda-screen-bg: #f0f0f0;
+            --win-blue: #005a9e;
+            --win-dark: #333;
             --sys-font: 'Tahoma', 'Segoe UI', sans-serif;
-            --bios-font: 'Courier Prime', monospace;
+            --bios-font: 'Courier New', monospace;
         }
 
         body { 
-            background-color: var(--military-bg); 
+            background-color: #1a1a1a; 
             font-family: var(--sys-font); 
             margin: 0; 
             display: flex; 
@@ -28,156 +25,184 @@
             overflow: hidden;
         }
 
-        /* Rugged Frame */
-        .pda-shell {
-            width: 960px;
-            height: 660px;
-            background: #3d3d3d;
-            padding: 15px;
-            border: 4px solid #1a1a1a;
-            border-radius: 8px;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.9);
+        /* PDA Handheld Chassis */
+        .pda-chassis {
+            width: 480px;
+            height: 800px;
+            background: linear-gradient(145deg, #e6e6e6, #999);
+            border: 4px solid #444;
+            border-radius: 40px;
+            padding: 20px;
+            box-shadow: 0 50px 100px rgba(0,0,0,0.8);
+            display: flex;
+            flex-direction: column;
             position: relative;
         }
 
-        /* Classic Windows Window */
-        .os-window {
-            height: 100%;
-            background: var(--win-gray);
-            border: 2px solid;
-            border-color: var(--win-light) var(--win-shadow) var(--win-shadow) var(--win-light);
+        /* The Internal Screen */
+        .pda-screen {
+            flex-grow: 1;
+            background: var(--pda-screen-bg);
+            border: 10px solid #222;
+            border-radius: 10px;
             display: flex;
             flex-direction: column;
+            overflow: hidden;
+            position: relative;
         }
 
-        /* Win95 Title Bar */
+        /* Portrait Title Bar */
         .title-bar {
-            background: linear-gradient(90deg, var(--win-blue), #1084d0);
+            background: var(--win-blue);
             color: white;
-            padding: 3px 6px;
+            padding: 8px 12px;
             font-weight: bold;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 13px;
+            font-size: 14px;
         }
 
-        .title-controls span {
-            background: var(--win-gray);
-            color: black;
-            border: 1px solid;
-            border-color: var(--win-light) var(--win-shadow) var(--win-shadow) var(--win-light);
-            padding: 0 4px;
-            margin-left: 2px;
-            font-size: 10px;
-            cursor: default;
-        }
-
-        /* Navigation */
-        .toolbar { padding: 6px; border-bottom: 1px solid var(--win-dark); display: flex; gap: 4px; background: var(--win-gray); }
-        
-        .win-btn { 
-            background: var(--win-gray); 
-            border: 2px solid; 
-            border-color: var(--win-light) var(--win-dark) var(--win-dark) var(--win-light); 
-            padding: 4px 10px; 
-            cursor: pointer; 
-            font-size: 11px;
-            font-family: var(--sys-font);
-        }
-        
-        .win-btn:active, .win-btn.active { 
-            border-color: var(--win-dark) var(--win-light) var(--win-light) var(--win-dark); 
-            padding: 5px 9px 3px 11px;
-            outline: none;
-        }
-
-        .save-btn { margin-left: auto; font-weight: bold; }
-
-        /* Content Area */
-        .content-area { 
-            flex-grow: 1; 
-            margin: 8px; 
-            background: white; 
-            border: 2px solid inset; 
-            border-color: var(--win-dark) var(--win-light) var(--win-light) var(--win-dark); 
-            overflow-y: auto; 
+        /* Content Area optimized for Portrait */
+        .viewport {
+            flex-grow: 1;
+            overflow-y: auto;
+            background: white;
+            margin: 5px;
+            border: 2px solid var(--pda-dark-silver);
         }
 
         table { width: 100%; border-collapse: collapse; display: none; }
         table.active { display: table; }
-        th { background: var(--win-gray); border: 1px solid var(--win-dark); padding: 6px; text-align: left; font-size: 11px; position: sticky; top: 0; }
-        td { border: 1px solid #dcdcdc; height: 28px; }
-        input { width: 100%; height: 100%; border: none; padding: 6px; box-sizing: border-box; font-size: 12px; font-family: var(--sys-font); background: transparent; }
-        input:focus { background: #ffffcc; outline: none; }
+        th { 
+            background: #e1e1e1; 
+            border-bottom: 2px solid var(--win-dark); 
+            padding: 8px; 
+            font-size: 11px; 
+            text-align: left;
+            position: sticky; top: 0;
+        }
+        td { border-bottom: 1px solid #ddd; height: 40px; }
+        input { width: 100%; height: 100%; border: none; padding: 5px; font-size: 13px; }
 
-        /* BIOS BOOT SCREEN */
+        /* PDA Tab Navigation (Icons/Buttons) */
+        .pda-nav {
+            display: flex;
+            background: #ddd;
+            border-top: 2px solid #999;
+            padding: 5px;
+            gap: 2px;
+        }
+        .nav-btn {
+            flex: 1;
+            background: #ccc;
+            border: 1px solid #777;
+            padding: 10px 2px;
+            font-size: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+        }
+        .nav-btn.active { background: white; border-bottom: none; }
+
+        /* Hardware Buttons at bottom */
+        .hw-buttons {
+            display: flex;
+            justify-content: space-around;
+            padding-top: 15px;
+        }
+        .hw-btn {
+            width: 60px; height: 35px;
+            background: #777;
+            border-radius: 10px;
+            border: 2px solid #444;
+            box-shadow: inset 2px 2px 5px #999;
+        }
+
+        /* Status Bar with Buffer Animation */
+        .status-footer {
+            background: #eee;
+            padding: 4px 10px;
+            font-size: 11px;
+            border-top: 1px solid #ccc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .buffering {
+            display: inline-block;
+            width: 10px; height: 10px;
+            border: 2px solid #999;
+            border-top: 2px solid var(--win-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 5px;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* Updated BIOS */
         #boot-screen { 
             position: absolute; top:0; left:0; width:100%; height:100%; 
             background: #000; color: #fff; font-family: var(--bios-font); 
-            padding: 40px; z-index: 9999; box-sizing: border-box; 
+            padding: 20px; z-index: 1000; box-sizing: border-box; 
         }
-        
-        #progress-container { width: 100%; border: 1px solid #fff; height: 20px; margin-top: 20px; display: none; }
-        #progress-bar { width: 0%; background: #fff; height: 100%; transition: width 0.1s; }
+        .progress-box { width: 100%; border: 1px solid #fff; height: 15px; margin-top: 20px; }
+        #progress-bar { width: 0%; background: #fff; height: 100%; }
 
-        /* UPLINK OVERLAY (Flashy but readable) */
+        /* Transmission Overlay */
         #uplink-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            color: #fff; display: none; flex-direction: column;
-            justify-content: center; align-items: center; z-index: 5000;
+            background: rgba(255,255,255,0.8);
+            display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 500;
         }
-        .uplink-box {
-            background: var(--win-gray); border: 2px solid #fff;
-            padding: 20px; text-align: center; color: black;
-            box-shadow: 10px 10px 0px rgba(0,0,0,0.5);
-        }
-
-        .status-bar { background: var(--win-gray); border-top: 1px solid var(--win-dark); padding: 2px 8px; font-size: 11px; display: flex; justify-content: space-between; }
     </style>
 </head>
 <body>
 
-<div class="pda-shell">
-    <div id="boot-screen">
-        <div id="boot-log"></div>
-        <div id="progress-container">
-            <div id="progress-bar"></div>
+<div class="pda-chassis">
+    <div class="pda-screen">
+        <div id="boot-screen">
+            <div id="boot-log" style="font-size: 12px;"></div>
+            <div class="progress-box"><div id="progress-bar"></div></div>
         </div>
-    </div>
 
-    <div id="uplink-overlay">
-        <div class="uplink-box">
-            <div style="font-weight: bold; margin-bottom: 10px;">BURST TRANSMISSION IN PROGRESS</div>
-            <div id="uplink-text" style="font-family: monospace;">ENCRYPTING...</div>
+        <div id="uplink-overlay">
+            <div class="buffering" style="width:30px; height:30px; border-width:4px;"></div>
+            <p><b>SYNCING DATA...</b></p>
         </div>
-    </div>
 
-    <div class="os-window">
         <div class="title-bar">
-            <span>SSU_REMOTE_TERMINAL.exe</span>
-            <div class="title-controls"><span>?</span><span>×</span></div>
+            <span>SSU_PDA_v4.0</span>
+            <span id="pda-clock">00:00</span>
         </div>
 
-        <div class="toolbar">
-            <button class="win-btn active" id="btn-Personnel" onclick="switchTab('Personnel')">Personnel</button>
-            <button class="win-btn" id="btn-Stalkers" onclick="switchTab('Stalkers')">Watchlist</button>
-            <button class="win-btn" id="btn-Relations" onclick="switchTab('Relations')">Relations</button>
-            <button class="win-btn" onclick="addNewRow()">Add Row</button>
-            <button class="win-btn save-btn" id="save-btn" onclick="saveToCloud()">COMMIT CHANGES</button>
+        <div class="pda-nav">
+            <div class="nav-btn active" id="btn-Personnel" onclick="switchTab('Personnel')">PERSONNEL</div>
+            <div class="nav-btn" id="btn-Stalkers" onclick="switchTab('Stalkers')">WATCHLIST</div>
+            <div class="nav-btn" id="btn-Relations" onclick="switchTab('Relations')">RELATIONS</div>
         </div>
 
-        <div class="content-area">
-            <table id="table-Personnel" class="active"><thead><tr><th>Callsign</th><th>Rank</th><th>Spec</th><th>Status</th></tr></thead><tbody></tbody></table>
-            <table id="table-Stalkers"><thead><tr><th>Alias</th><th>Threat</th><th>Location</th><th>Directives</th></tr></thead><tbody></tbody></table>
-            <table id="table-Relations"><thead><tr><th>Faction</th><th>Standing</th><th>ROE</th></tr></thead><tbody></tbody></table>
+        <div class="viewport">
+            <table id="table-Personnel" class="active"><thead><tr><th>CALLSIGN</th><th>RANK</th><th>SPEC</th></tr></thead><tbody></tbody></table>
+            <table id="table-Stalkers"><thead><tr><th>ALIAS</th><th>THREAT</th><th>LOC</th></tr></thead><tbody></tbody></table>
+            <table id="table-Relations"><thead><tr><th>FACTION</th><th>STATUS</th><th>ROE</th></tr></thead><tbody></tbody></table>
         </div>
 
-        <div class="status-bar">
-            <span id="sync-status">UPLINK: READY</span>
-            <span id="clock">00:00:00</span>
+        <div style="padding: 10px; background: #ddd; display: flex; gap: 10px;">
+            <button onclick="addNewRow()" style="flex:1; padding:8px;">+ NEW ENTRY</button>
+            <button onclick="saveToCloud()" style="flex:1; padding:8px; background:var(--win-blue); color:white; border:none;">COMMIT</button>
         </div>
+
+        <div class="status-footer">
+            <div><span id="buffer-icon" class="buffering" style="display:none;"></span>STATUS: <span id="sync-status">IDLE</span></div>
+            <div>BATT: 88%</div>
+        </div>
+    </div>
+
+    <div class="hw-buttons">
+        <div class="hw-btn"></div>
+        <div class="hw-btn" style="width:80px; height:45px; border-radius: 50%;"></div>
+        <div class="hw-btn"></div>
     </div>
 </div>
 
@@ -187,7 +212,7 @@
 
     async function switchTab(tabName) {
         currentTab = tabName;
-        document.querySelectorAll('.win-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         document.getElementById('btn-' + tabName).classList.add('active');
         document.querySelectorAll('table').forEach(t => t.classList.remove('active'));
         document.getElementById('table-' + tabName).classList.add('active');
@@ -195,15 +220,17 @@
     }
 
     async function loadFromCloud() {
-        document.getElementById('sync-status').innerText = "UPLINK: RECEIVING...";
+        document.getElementById('sync-status').innerText = "DOWNLOADING";
+        document.getElementById('buffer-icon').style.display = 'inline-block';
         try {
             const response = await fetch(`${UPLINK_URL}?sheet=${currentTab}`);
             const data = await response.json();
             const body = document.querySelector(`#table-${currentTab} tbody`);
             body.innerHTML = "";
             data.forEach(rowData => renderRow(rowData));
-            document.getElementById('sync-status').innerText = "UPLINK: CONNECTED";
-        } catch (e) { document.getElementById('sync-status').innerText = "UPLINK: ERROR"; }
+            document.getElementById('sync-status').innerText = "CONNECTED";
+        } catch (e) { document.getElementById('sync-status').innerText = "OFFLINE"; }
+        document.getElementById('buffer-icon').style.display = 'none';
     }
 
     async function saveToCloud() {
@@ -213,19 +240,16 @@
         });
 
         try {
-            document.getElementById('uplink-text').innerText = "ESTABLISHING LINK...";
             await fetch(UPLINK_URL, {
                 method: "POST", mode: "no-cors",
                 body: JSON.stringify({ targetSheet: currentTab, rows: rows })
             });
-            document.getElementById('uplink-text').innerText = "TRANSMISSION SUCCESSFUL";
             setTimeout(() => {
                 document.getElementById('uplink-overlay').style.display = 'none';
                 loadFromCloud();
-            }, 1200);
+            }, 1000);
         } catch (e) { 
-            document.getElementById('uplink-text').innerText = "LINK FAILED";
-            setTimeout(() => document.getElementById('uplink-overlay').style.display = 'none', 2000);
+            document.getElementById('uplink-overlay').style.display = 'none';
         }
     }
 
@@ -244,32 +268,31 @@
 
     function addNewRow() { renderRow(); }
 
-    // BIOS Script
-    const logLines = [
-        "SSU TACTICAL BOOTLOADER v3.6", "SYSTEM CHECK: OK", "VRAM: 64MB OK",
-        "UPLINK MODULE: DETECTED", "AUTHENTICATING SSU_KEY...", "INIT: REMOTE_DATA_LOAD"
-    ];
+    // BIOS Script with White Loading Bar
+    const logLines = ["PDA BOOT v4.0", "KERNEL LOADED", "UPLINK MODULE: OK", "SYNCING RTC...", "LOGGING IN..."];
     let l = 0;
     function runBoot() {
         const log = document.getElementById('boot-log');
         if(l < logLines.length) {
-            log.innerHTML += logLines[l] + "<br>";
+            log.innerHTML += "> " + logLines[l] + "<br>";
             l++; setTimeout(runBoot, 300);
         } else {
-            document.getElementById('progress-container').style.display = 'block';
             let p = 0;
             const bar = document.getElementById('progress-bar');
             const int = setInterval(() => {
-                p += 10; bar.style.width = p + "%";
+                p += 5; bar.style.width = p + "%";
                 if(p >= 100) {
                     clearInterval(int);
                     loadFromCloud().then(() => document.getElementById('boot-screen').style.display='none');
                 }
-            }, 80);
+            }, 50);
         }
     }
     window.onload = runBoot;
-    setInterval(() => document.getElementById('clock').innerText = new Date().toLocaleTimeString(), 1000);
+    setInterval(() => {
+        const now = new Date();
+        document.getElementById('pda-clock').innerText = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
+    }, 1000);
 </script>
 </body>
 </html>

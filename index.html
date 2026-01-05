@@ -2,22 +2,24 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>SSU-TACTICAL-UPLINK-v3.5</title>
+    <title>SSU-TACTICAL-UPLINK-v3.6</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap');
 
         :root {
-            --os-bg: #2b2b2b;
-            --win-gray: #b0b0b0;
-            --win-dark: #4a4a4a;
-            --win-accent: #004400; /* Military Green */
-            --lcd-green: #33ff33;
-            --warning-amber: #ffb000;
+            --win-gray: #c0c0c0;
+            --win-dark: #808080;
+            --win-light: #ffffff;
+            --win-shadow: #404040;
+            --win-blue: #000080; /* Classic Win95 Blue */
+            --military-bg: #2b2e2b;
+            --sys-font: 'Tahoma', 'Segoe UI', sans-serif;
+            --bios-font: 'Courier Prime', monospace;
         }
 
         body { 
-            background-color: #050505; 
-            font-family: 'Tahoma', sans-serif; 
+            background-color: var(--military-bg); 
+            font-family: var(--sys-font); 
             margin: 0; 
             display: flex; 
             justify-content: center; 
@@ -26,175 +28,144 @@
             overflow: hidden;
         }
 
-        /* Scanline Overlay for Retro Feel */
-        body::before {
-            content: " ";
-            display: block;
-            position: absolute;
-            top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            z-index: 5000;
-            background-size: 100% 4px, 3px 100%;
-            pointer-events: none;
-        }
-
-        /* The Main PDA Shell */
-        .pda-frame {
-            width: 1000px;
-            height: 700px;
-            background: #1a1a1a;
-            border: 15px solid #222;
-            border-radius: 20px;
-            box-shadow: inset 0 0 50px #000, 0 20px 50px rgba(0,0,0,0.8);
-            display: flex;
-            flex-direction: column;
+        /* Rugged Frame */
+        .pda-shell {
+            width: 960px;
+            height: 660px;
+            background: #3d3d3d;
+            padding: 15px;
+            border: 4px solid #1a1a1a;
+            border-radius: 8px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.9);
             position: relative;
         }
 
-        /* The OS Window */
+        /* Classic Windows Window */
         .os-window {
-            flex-grow: 1;
-            margin: 5px;
+            height: 100%;
             background: var(--win-gray);
-            border: 2px solid #555;
+            border: 2px solid;
+            border-color: var(--win-light) var(--win-shadow) var(--win-shadow) var(--win-light);
             display: flex;
             flex-direction: column;
         }
 
-        /* Title Bar */
+        /* Win95 Title Bar */
         .title-bar {
-            background: var(--win-accent);
-            color: var(--lcd-green);
-            padding: 6px 12px;
+            background: linear-gradient(90deg, var(--win-blue), #1084d0);
+            color: white;
+            padding: 3px 6px;
             font-weight: bold;
             display: flex;
             justify-content: space-between;
-            border-bottom: 2px solid #000;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            align-items: center;
+            font-size: 13px;
+        }
+
+        .title-controls span {
+            background: var(--win-gray);
+            color: black;
+            border: 1px solid;
+            border-color: var(--win-light) var(--win-shadow) var(--win-shadow) var(--win-light);
+            padding: 0 4px;
+            margin-left: 2px;
+            font-size: 10px;
+            cursor: default;
         }
 
         /* Navigation */
-        .toolbar { padding: 8px; border-bottom: 1px solid var(--win-dark); display: flex; gap: 8px; background: #999; }
+        .toolbar { padding: 6px; border-bottom: 1px solid var(--win-dark); display: flex; gap: 4px; background: var(--win-gray); }
         
         .win-btn { 
-            background: #888; 
+            background: var(--win-gray); 
             border: 2px solid; 
-            border-color: #eee #444 #444 #eee; 
-            padding: 6px 15px; 
+            border-color: var(--win-light) var(--win-dark) var(--win-dark) var(--win-light); 
+            padding: 4px 10px; 
             cursor: pointer; 
-            font-size: 11px; 
-            font-weight: bold;
+            font-size: 11px;
+            font-family: var(--sys-font);
         }
         
         .win-btn:active, .win-btn.active { 
-            border-color: #444 #eee #eee #444; 
-            background: #777; 
-            color: white;
+            border-color: var(--win-dark) var(--win-light) var(--win-light) var(--win-dark); 
+            padding: 5px 9px 3px 11px;
+            outline: none;
         }
 
-        .save-btn { 
-            background: #2d5a2d; 
-            color: white; 
-            margin-left: auto;
-            border-color: #4e8c4e #1a331a #1a331a #4e8c4e;
-        }
+        .save-btn { margin-left: auto; font-weight: bold; }
 
         /* Content Area */
         .content-area { 
             flex-grow: 1; 
-            margin: 10px; 
-            background: #e0e0e0; 
-            border: 3px solid #444; 
+            margin: 8px; 
+            background: white; 
+            border: 2px solid inset; 
+            border-color: var(--win-dark) var(--win-light) var(--win-light) var(--win-dark); 
             overflow-y: auto; 
         }
 
         table { width: 100%; border-collapse: collapse; display: none; }
         table.active { display: table; }
-        th { background: #333; color: var(--lcd-green); border: 1px solid #000; padding: 10px; text-align: left; font-size: 10px; }
-        td { border: 1px solid #bbb; }
-        input { width: 100%; height: 35px; border: none; padding: 8px; box-sizing: border-box; font-size: 13px; background: transparent; color: #111; }
-        input:focus { background: #fff; outline: 2px solid var(--lcd-green); }
-
-        /* UPLINK OVERLAY (The "Flashy" part) */
-        #uplink-overlay {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 68, 0, 0.9);
-            color: var(--lcd-green);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            z-index: 4000;
-            font-family: 'VT323', monospace;
-            font-size: 32px;
-        }
+        th { background: var(--win-gray); border: 1px solid var(--win-dark); padding: 6px; text-align: left; font-size: 11px; position: sticky; top: 0; }
+        td { border: 1px solid #dcdcdc; height: 28px; }
+        input { width: 100%; height: 100%; border: none; padding: 6px; box-sizing: border-box; font-size: 12px; font-family: var(--sys-font); background: transparent; }
+        input:focus { background: #ffffcc; outline: none; }
 
         /* BIOS BOOT SCREEN */
         #boot-screen { 
-            position: absolute; 
-            top:0; left:0; width:100%; height:100%; 
-            background: black; 
-            color: #ddd; 
-            font-family: 'VT323', monospace; 
-            padding: 40px; 
-            z-index: 6000; 
-            box-sizing: border-box; 
+            position: absolute; top:0; left:0; width:100%; height:100%; 
+            background: #000; color: #fff; font-family: var(--bios-font); 
+            padding: 40px; z-index: 9999; box-sizing: border-box; 
         }
         
-        .loading-bar-container {
-            width: 300px;
-            height: 20px;
-            border: 2px solid #ddd;
-            margin-top: 20px;
-            position: relative;
+        #progress-container { width: 100%; border: 1px solid #fff; height: 20px; margin-top: 20px; display: none; }
+        #progress-bar { width: 0%; background: #fff; height: 100%; transition: width 0.1s; }
+
+        /* UPLINK OVERLAY (Flashy but readable) */
+        #uplink-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            color: #fff; display: none; flex-direction: column;
+            justify-content: center; align-items: center; z-index: 5000;
         }
-        
-        #loading-fill {
-            height: 100%;
-            background: var(--lcd-green);
-            width: 0%;
+        .uplink-box {
+            background: var(--win-gray); border: 2px solid #fff;
+            padding: 20px; text-align: center; color: black;
+            box-shadow: 10px 10px 0px rgba(0,0,0,0.5);
         }
 
-        .status-bar { 
-            background: #222; 
-            color: #888; 
-            padding: 5px 15px; 
-            font-size: 10px; 
-            display: flex; 
-            justify-content: space-between; 
-        }
+        .status-bar { background: var(--win-gray); border-top: 1px solid var(--win-dark); padding: 2px 8px; font-size: 11px; display: flex; justify-content: space-between; }
     </style>
 </head>
 <body>
 
-<div class="pda-frame">
+<div class="pda-shell">
     <div id="boot-screen">
-        <div style="color: #fff; font-size: 24px; margin-bottom: 10px;">UKR_MIL_SYSTEMS v4.0.21</div>
         <div id="boot-log"></div>
-        <div class="loading-bar-container" id="boot-bar-container" style="display:none;">
-            <div id="loading-fill"></div>
+        <div id="progress-container">
+            <div id="progress-bar"></div>
         </div>
     </div>
 
     <div id="uplink-overlay">
-        <div style="margin-bottom: 20px;">[ UPLINKING TO SSU MAINFRAME ]</div>
-        <div style="font-size: 18px;" id="uplink-details">ENCRYPTING PACKETS...</div>
+        <div class="uplink-box">
+            <div style="font-weight: bold; margin-bottom: 10px;">BURST TRANSMISSION IN PROGRESS</div>
+            <div id="uplink-text" style="font-family: monospace;">ENCRYPTING...</div>
+        </div>
     </div>
 
     <div class="os-window">
         <div class="title-bar">
-            <span>PDA_OS :: SECURE_DATA_TERMINAL</span>
-            <div class="title-controls"><span>_</span><span>[ ]</span><span>X</span></div>
+            <span>SSU_REMOTE_TERMINAL.exe</span>
+            <div class="title-controls"><span>?</span><span>×</span></div>
         </div>
 
         <div class="toolbar">
-            <button class="win-btn active" id="btn-Personnel" onclick="switchTab('Personnel')">PERSONNEL</button>
-            <button class="win-btn" id="btn-Stalkers" onclick="switchTab('Stalkers')">WATCHLIST</button>
-            <button class="win-btn" id="btn-Relations" onclick="switchTab('Relations')">RELATIONS</button>
-            <button class="win-btn" onclick="addNewRow()">+ ADD ENTRY</button>
-            <button class="win-btn save-btn" id="save-btn" onclick="saveToCloud()">TRANSMIT DATA</button>
+            <button class="win-btn active" id="btn-Personnel" onclick="switchTab('Personnel')">Personnel</button>
+            <button class="win-btn" id="btn-Stalkers" onclick="switchTab('Stalkers')">Watchlist</button>
+            <button class="win-btn" id="btn-Relations" onclick="switchTab('Relations')">Relations</button>
+            <button class="win-btn" onclick="addNewRow()">Add Row</button>
+            <button class="win-btn save-btn" id="save-btn" onclick="saveToCloud()">COMMIT CHANGES</button>
         </div>
 
         <div class="content-area">
@@ -204,16 +175,14 @@
         </div>
 
         <div class="status-bar">
-            <span id="sync-status">RADIO: STANDBY</span>
+            <span id="sync-status">UPLINK: READY</span>
             <span id="clock">00:00:00</span>
         </div>
     </div>
 </div>
 
 <script>
-    // --- APP URL HERE ---
     const UPLINK_URL = "https://script.google.com/macros/s/AKfycbyqfwn91pnhsTSG2mlPIG1X9OSpPwnnk_ur3JtpOMtxzwVR1I4iR4jFwxEgSj2Xg_VR/exec";
-    
     let currentTab = "Personnel";
 
     async function switchTab(tabName) {
@@ -226,40 +195,37 @@
     }
 
     async function loadFromCloud() {
-        document.getElementById('sync-status').innerText = "RADIO: RECEIVING...";
+        document.getElementById('sync-status').innerText = "UPLINK: RECEIVING...";
         try {
             const response = await fetch(`${UPLINK_URL}?sheet=${currentTab}`);
             const data = await response.json();
             const body = document.querySelector(`#table-${currentTab} tbody`);
             body.innerHTML = "";
             data.forEach(rowData => renderRow(rowData));
-            document.getElementById('sync-status').innerText = "RADIO: CONNECTED";
-        } catch (e) { document.getElementById('sync-status').innerText = "RADIO: SIGNAL LOST"; }
+            document.getElementById('sync-status').innerText = "UPLINK: CONNECTED";
+        } catch (e) { document.getElementById('sync-status').innerText = "UPLINK: ERROR"; }
     }
 
     async function saveToCloud() {
-        const overlay = document.getElementById('uplink-overlay');
-        overlay.style.display = 'flex';
-        
+        document.getElementById('uplink-overlay').style.display = 'flex';
         const rows = Array.from(document.querySelectorAll(`#table-${currentTab} tbody tr`)).map(tr => {
             return Array.from(tr.querySelectorAll('input')).map(input => input.value);
         });
 
         try {
-            document.getElementById('uplink-details').innerText = "ESTABLISHING BURST TRANSMISSION...";
+            document.getElementById('uplink-text').innerText = "ESTABLISHING LINK...";
             await fetch(UPLINK_URL, {
-                method: "POST",
-                mode: "no-cors",
+                method: "POST", mode: "no-cors",
                 body: JSON.stringify({ targetSheet: currentTab, rows: rows })
             });
-            document.getElementById('uplink-details').innerText = "DATA RECEIVED BY MAINFRAME.";
+            document.getElementById('uplink-text').innerText = "TRANSMISSION SUCCESSFUL";
             setTimeout(() => {
-                overlay.style.display = 'none';
+                document.getElementById('uplink-overlay').style.display = 'none';
                 loadFromCloud();
-            }, 1500);
+            }, 1200);
         } catch (e) { 
-            document.getElementById('uplink-details').innerText = "TRANSMISSION FAILED.";
-            setTimeout(() => overlay.style.display = 'none', 2000);
+            document.getElementById('uplink-text').innerText = "LINK FAILED";
+            setTimeout(() => document.getElementById('uplink-overlay').style.display = 'none', 2000);
         }
     }
 
@@ -278,41 +244,30 @@
 
     function addNewRow() { renderRow(); }
 
-    // --- FLASHY BIOS BOOT ---
+    // BIOS Script
     const logLines = [
-        "CPU: Intel Pentium M @ 1.1GHz",
-        "Memory Test: 512MB OK",
-        "Primary Master: 20GB Rugged-HDD OK",
-        "Detecting SAT-Link... FOUND",
-        "Loading SSU Kernel...",
-        "Applying Zone-Specific Encryption...",
-        "Mounting File Systems..."
+        "SSU TACTICAL BOOTLOADER v3.6", "SYSTEM CHECK: OK", "VRAM: 64MB OK",
+        "UPLINK MODULE: DETECTED", "AUTHENTICATING SSU_KEY...", "INIT: REMOTE_DATA_LOAD"
     ];
-
     let l = 0;
     function runBoot() {
         const log = document.getElementById('boot-log');
         if(l < logLines.length) {
-            log.innerHTML += `> ${logLines[l]}<br>`;
-            l++;
-            setTimeout(runBoot, Math.random() * 400);
+            log.innerHTML += logLines[l] + "<br>";
+            l++; setTimeout(runBoot, 300);
         } else {
-            document.getElementById('boot-bar-container').style.display = 'block';
-            let progress = 0;
-            const fill = document.getElementById('loading-fill');
-            const interval = setInterval(() => {
-                progress += Math.random() * 15;
-                fill.style.width = progress + "%";
-                if(progress >= 100) {
-                    clearInterval(interval);
-                    loadFromCloud().then(() => {
-                        document.getElementById('boot-screen').style.display='none';
-                    });
+            document.getElementById('progress-container').style.display = 'block';
+            let p = 0;
+            const bar = document.getElementById('progress-bar');
+            const int = setInterval(() => {
+                p += 10; bar.style.width = p + "%";
+                if(p >= 100) {
+                    clearInterval(int);
+                    loadFromCloud().then(() => document.getElementById('boot-screen').style.display='none');
                 }
-            }, 100);
+            }, 80);
         }
     }
-
     window.onload = runBoot;
     setInterval(() => document.getElementById('clock').innerText = new Date().toLocaleTimeString(), 1000);
 </script>

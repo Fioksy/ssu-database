@@ -488,6 +488,12 @@
                 0 0 8px rgba(124, 220, 146, 0.5);
         }
 
+        input:disabled,
+        select:disabled {
+            opacity: 0.6;
+            cursor: default;
+        }
+
         .row-delete-btn {
             width: 18px;
             height: 18px;
@@ -513,6 +519,11 @@
             box-shadow:
                 inset 0 0 4px rgba(0,0,0,0.8),
                 0 0 0 1px #000;
+        }
+
+        .row-delete-btn:disabled {
+            opacity: 0.3;
+            cursor: default;
         }
 
         #table-Stalkers th:nth-child(3),
@@ -564,6 +575,12 @@
                 0 0 0 1px rgba(0,0,0,1);
         }
 
+        .gloss-btn:disabled,
+        .gloss-btn.disabled {
+            opacity: 0.4;
+            cursor: default;
+        }
+
         .commit-btn {
             background: linear-gradient(to bottom, #3b6b40, #1b3b23);
             border-color: #18411f;
@@ -572,7 +589,7 @@
                 0 0 0 1px rgba(0,0,0,1);
         }
 
-        .commit-btn:hover {
+        .commit-btn:hover:enabled {
             background: linear-gradient(to bottom, #48854f, #21512c);
         }
 
@@ -740,6 +757,7 @@
             }
         }
 
+        /* START SCREEN */
         #start-overlay {
             position: fixed;
             inset: 0;
@@ -769,7 +787,6 @@
             align-items: center;
         }
 
-        /* bigger icon now */
         .start-icon {
             width: 72px;
             height: 72px;
@@ -845,6 +862,137 @@
             box-shadow:
                 inset 0 0 6px rgba(0,0,0,0.7),
                 0 0 0 1px #000;
+        }
+
+        /* PIN MODALS – BIOS STYLE */
+        #pin-modal,
+        #pin-admin-modal {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10001;
+        }
+
+        .pin-panel {
+            background: #000;
+            border-radius: 6px;
+            border: 1px solid #bfbfbf;
+            box-shadow:
+                0 0 0 1px #000,
+                0 0 18px rgba(255, 255, 255, 0.18);
+            padding: 16px 24px 14px;
+            min-width: 260px;
+            color: #f4f4f4;
+            font-size: 12px;
+            font-family: var(--bios-font);
+            text-align: left;
+            position: relative;
+        }
+
+        .pin-panel::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                repeating-linear-gradient(
+                    to bottom,
+                    rgba(255, 255, 255, 0.10) 0px,
+                    rgba(255, 255, 255, 0.10) 1px,
+                    transparent 1px,
+                    transparent 3px
+                );
+            opacity: 0.08;
+            pointer-events: none;
+        }
+
+        .pin-title {
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            margin-bottom: 4px;
+            color: #f4f4f4;
+        }
+
+        .pin-subtitle {
+            font-size: 11px;
+            color: #d0d0d0;
+            margin-bottom: 10px;
+        }
+
+        #pin-input,
+        #new-user-pin,
+        #new-admin-pin {
+            width: 100%;
+            height: 24px;
+            border-radius: 0;
+            border: 1px solid #c0c0c0;
+            padding: 2px 4px;
+            font-size: 13px;
+            font-family: var(--bios-font);
+            letter-spacing: 0.22em;
+            background: #000;
+            color: #f4f4f4;
+            box-shadow:
+                inset 0 0 0 1px #101010,
+                0 0 0 1px rgba(0, 0, 0, 0.9);
+        }
+
+        #new-user-pin,
+        #new-admin-pin {
+            letter-spacing: 0.18em;
+            text-align: left;
+        }
+
+        .pin-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        .pin-btn {
+            padding: 3px 9px;
+            border-radius: 0;
+            border: 1px solid #b0b0b0;
+            background: #000;
+            color: #f4f4f4;
+            font-size: 10px;
+            font-family: var(--bios-font);
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            cursor: pointer;
+        }
+
+        .pin-btn:hover {
+            background: #111111;
+        }
+
+        .pin-btn:active {
+            background: #080808;
+            box-shadow:
+                inset 0 0 4px rgba(0, 0, 0, 0.9);
+        }
+
+        .pin-error {
+            margin-top: 8px;
+            font-size: 10px;
+            color: #ff8080;
+            min-height: 12px;
+        }
+
+        .pin-note {
+            font-size: 10px;
+            color: #b0b0b0;
+            margin-top: 6px;
+        }
+
+        .pin-field-label {
+            font-size: 10px;
+            margin-top: 6px;
+            margin-bottom: 2px;
+            color: #cccccc;
         }
 
         #uplink-overlay {
@@ -1088,6 +1236,7 @@
 </head>
 <body>
 
+<!-- START SCREEN -->
 <div id="start-overlay">
     <div class="start-panel">
         <div class="start-icon">
@@ -1097,6 +1246,43 @@
             <div class="start-icon-led"></div>
         </div>
         <button id="start-btn">LAUNCH DATABASE</button>
+    </div>
+</div>
+
+<!-- PIN LOGIN (BIOS STYLE) -->
+<div id="pin-modal">
+    <div class="pin-panel">
+        <div class="pin-title">FIELD TERMINAL AUTH</div>
+        <div class="pin-subtitle">ENTER ACCESS PIN</div>
+        <input id="pin-input" type="password" maxlength="8" autocomplete="off" inputmode="numeric">
+        <div id="pin-error" class="pin-error"></div>
+        <div class="pin-buttons">
+            <button class="pin-btn" id="pin-cancel">ABORT</button>
+            <button class="pin-btn" id="pin-ok">CONFIRM</button>
+        </div>
+    </div>
+</div>
+
+<!-- ADMIN PIN CHANGE (ADMIN ONLY) -->
+<div id="pin-admin-modal">
+    <div class="pin-panel">
+        <div class="pin-title">ADMIN SECURITY MENU</div>
+        <div class="pin-subtitle">UPDATE FIELD ACCESS PINS</div>
+
+        <div class="pin-field-label">NEW USER PIN <span style="color:#cccccc;">(optional)</span></div>
+        <input id="new-user-pin" type="password" maxlength="8" autocomplete="off" inputmode="numeric">
+
+        <div class="pin-field-label">NEW ADMIN PIN <span style="color:#cccccc;">(optional)</span></div>
+        <input id="new-admin-pin" type="password" maxlength="8" autocomplete="off" inputmode="numeric">
+
+        <div class="pin-note">LEAVE FIELD BLANK TO KEEP CURRENT VALUE.</div>
+
+        <div id="pin-admin-error" class="pin-error"></div>
+
+        <div class="pin-buttons">
+            <button class="pin-btn" id="pin-admin-cancel">CLOSE</button>
+            <button class="pin-btn" id="pin-admin-save">WRITE</button>
+        </div>
     </div>
 </div>
 
@@ -1137,6 +1323,9 @@
                 </div>
                 <div class="title-right">
                     <span class="zone-tag">SECTOR 04 • ONLINE</span>
+                    <button class="icon-btn" id="admin-btn" style="display:none;" title="Admin Security">
+                        <span class="refresh-icon">⚙</span>
+                    </button>
                     <button class="icon-btn" id="refresh-btn" onclick="refreshWithSound()" title="Refresh / Force Sync">
                         <span class="refresh-icon">&#10227;</span>
                     </button>
@@ -1195,7 +1384,7 @@
             </div>
 
             <div class="action-bar">
-                <button class="gloss-btn" onclick="addNewRow()">+ ADD NEW ENTRY</button>
+                <button class="gloss-btn" id="add-entry-btn" onclick="addNewRow()">+ ADD NEW ENTRY</button>
                 <div style="flex-grow:1"></div>
                 <button class="gloss-btn commit-btn" onclick="saveToCloud()">COMMIT TO DATABASE</button>
             </div>
@@ -1205,6 +1394,8 @@
                     <span id="status-spinner" class="buffer-wheel" style="display:none;"></span>
                     <span class="status-label">STATUS:</span>
                     <span id="sync-status" class="status-value">READY</span>
+                    <span class="status-label" style="margin-left:12px;">ACCESS:</span>
+                    <span id="access-indicator" class="status-value">NONE</span>
                 </div>
                 <div>
                     <span class="signal-bar">
@@ -1228,9 +1419,156 @@
 </div>
 
 <script>
+    // IMPORTANT: replace with your deployed Apps Script URL if different
     const UPLINK_URL = "https://script.google.com/macros/s/AKfycbyqfwn91pnhsTSG2mlPIG1X9OSpPwnnk_ur3JtpOMtxzwVR1I4iR4jFwxEgSj2Xg_VR/exec";
-    let currentTab = "Personnel";
 
+    let accessLevel = "guest"; // 'guest' | 'user' | 'admin'
+
+    function canEditTab(tabName) {
+        if (accessLevel === "admin") return true;
+        if (tabName === "Personnel" || tabName === "Relations") return false;
+        return true;
+    }
+
+    function updateAccessIndicator() {
+        const el = document.getElementById('access-indicator');
+        if (el) {
+            if (accessLevel === 'admin') el.textContent = "ADMIN";
+            else if (accessLevel === 'user') el.textContent = "USER";
+            else el.textContent = "NONE";
+        }
+        const adminBtn = document.getElementById('admin-btn');
+        if (adminBtn) {
+            adminBtn.style.display = (accessLevel === 'admin') ? 'inline-flex' : 'none';
+        }
+    }
+
+    function openPinModal() {
+        const modal = document.getElementById('pin-modal');
+        const input = document.getElementById('pin-input');
+        const error = document.getElementById('pin-error');
+        if (!modal || !input || !error) return;
+        input.value = "";
+        error.textContent = "";
+        modal.style.display = "flex";
+        setTimeout(() => input.focus(), 10);
+    }
+
+    function closePinModal() {
+        const modal = document.getElementById('pin-modal');
+        if (modal) modal.style.display = "none";
+    }
+
+    async function handlePinSubmit() {
+        const input = document.getElementById('pin-input');
+        const error = document.getElementById('pin-error');
+        if (!input || !error) return;
+
+        const pin = (input.value || "").trim();
+        if (!pin) {
+            error.textContent = "PIN REQUIRED";
+            return;
+        }
+
+        error.textContent = "AUTHENTICATING...";
+
+        try {
+            const res = await fetch(UPLINK_URL, {
+                method: "POST",
+                body: JSON.stringify({
+                    mode: "auth",
+                    pin: pin
+                })
+            });
+
+            const data = await res.json();
+
+            if (data.status === "OK" && (data.role === "user" || data.role === "admin")) {
+                accessLevel = data.role;
+                updateAccessIndicator();
+                closePinModal();
+
+                const startOverlay = document.getElementById('start-overlay');
+                if (startOverlay) startOverlay.style.display = 'none';
+
+                startPDA();
+            } else {
+                error.textContent = "LOGIN FAILED: INCORRECT PIN";
+            }
+        } catch (e) {
+            console.error(e);
+            error.textContent = "AUTH ERROR";
+        }
+    }
+
+    function openAdminPinModal() {
+        if (accessLevel !== 'admin') return;
+        const modal = document.getElementById('pin-admin-modal');
+        const userInput = document.getElementById('new-user-pin');
+        const adminInput = document.getElementById('new-admin-pin');
+        const err = document.getElementById('pin-admin-error');
+        if (!modal || !userInput || !adminInput || !err) return;
+        userInput.value = "";
+        adminInput.value = "";
+        err.textContent = "";
+        err.style.color = "#ff8080";
+        modal.style.display = "flex";
+        setTimeout(() => userInput.focus(), 10);
+    }
+
+    function closeAdminPinModal() {
+        const modal = document.getElementById('pin-admin-modal');
+        if (modal) modal.style.display = "none";
+    }
+
+    async function handleAdminPinSubmit() {
+        if (accessLevel !== 'admin') return;
+        const userInput = document.getElementById('new-user-pin');
+        const adminInput = document.getElementById('new-admin-pin');
+        const err = document.getElementById('pin-admin-error');
+        if (!userInput || !adminInput || !err) return;
+
+        const newUserPin = (userInput.value || "").trim();
+        const newAdminPin = (adminInput.value || "").trim();
+
+        if (!newUserPin && !newAdminPin) {
+            err.textContent = "NO CHANGES SPECIFIED";
+            err.style.color = "#ff8080";
+            return;
+        }
+
+        err.textContent = "AUTHENTICATING...";
+        err.style.color = "#f4f4f4";
+
+        try {
+            const res = await fetch(UPLINK_URL, {
+                method: "POST",
+                body: JSON.stringify({
+                    mode: "setPins",
+                    userPin: newUserPin || null,
+                    adminPin: newAdminPin || null
+                })
+            });
+
+            const data = await res.json();
+            if (data.status === "OK") {
+                err.style.color = "#c0ffc0";
+                err.textContent = "PINS UPDATED OK";
+                setTimeout(closeAdminPinModal, 800);
+            } else {
+                err.style.color = "#ff8080";
+                err.textContent = "UPDATE FAILED";
+            }
+        } catch (e) {
+            console.error(e);
+            err.style.color = "#ff8080";
+            err.textContent = "NETWORK ERROR";
+        }
+    }
+
+    // --- EXISTING APP LOGIC ---
+
+    let currentTab = "Personnel";
     const sheetCache = { Personnel: null, Stalkers: null, Relations: null };
     const sheetRevision = { Personnel: null, Stalkers: null, Relations: null };
 
@@ -1311,7 +1649,6 @@
         osc.stop(now + 0.06);
     }
 
-    // NEW: more mechanical/confirmation style for refresh
     function playRefreshClick() {
         const ctx = getAudioCtx();
         if (!ctx) return;
@@ -1332,7 +1669,6 @@
         osc.stop(now + 0.15);
     }
 
-    // wrapper so refresh button plays sound then reloads
     function refreshWithSound() {
         playRefreshClick();
         loadFromCloud(true);
@@ -1407,6 +1743,13 @@
     function attachDeleteHandler(tr, labelFieldIndex = 0) {
         const btn = tr.querySelector('.row-delete-btn');
         if (!btn) return;
+
+        if (!canEditTab(currentTab) && (currentTab === "Personnel" || currentTab === "Relations")) {
+            btn.disabled = true;
+            btn.style.display = "none";
+            return;
+        }
+
         btn.addEventListener('click', () => {
             const labelInput = tr.querySelector(`td:nth-child(${labelFieldIndex + 1}) input`);
             const label = labelInput && labelInput.value.trim()
@@ -1430,6 +1773,7 @@
         if (toolbar) toolbar.style.display = (tabName === 'Stalkers') ? 'flex' : 'none';
 
         await loadFromCloud();
+        applyEditStateForCurrentTab();
     }
 
     async function loadFromCloud(force = false) {
@@ -1440,6 +1784,7 @@
             sheetCache[currentTab].forEach(rowData => renderRow(rowData));
             document.getElementById('sync-status').innerText = "CACHED";
             if (currentTab === 'Stalkers') applyStalkerFilter();
+            applyEditStateForCurrentTab();
             return;
         }
 
@@ -1472,6 +1817,7 @@
         }
 
         document.getElementById('status-spinner').style.display = 'none';
+        applyEditStateForCurrentTab();
     }
 
     async function saveToCloud() {
@@ -1544,6 +1890,9 @@
     function renderRow(rowData = null) {
         const body = document.querySelector(`#table-${currentTab} tbody`);
         const tr = document.createElement('tr');
+        const editable = canEditTab(currentTab);
+        const disabledAttrPersonnelRelations =
+            (!editable && (currentTab === "Personnel" || currentTab === "Relations")) ? 'disabled' : '';
 
         if (currentTab === "Personnel") {
             const data = rowData || ["", "Junior Sergeant", "", "Active"];
@@ -1551,9 +1900,9 @@
             const status = (rawStatus === "On Leave") ? "On Leave" : "Active";
 
             tr.innerHTML = `
-                <td><input type="text" placeholder="NAME" value="${data[0]}"></td>
+                <td><input type="text" placeholder="NAME" value="${data[0]}" ${disabledAttrPersonnelRelations}></td>
                 <td>
-                    <select>
+                    <select ${disabledAttrPersonnelRelations}>
                         <option ${data[1]=='Junior Sergeant'?'selected':''}>Junior Sergeant</option>
                         <option ${data[1]=='Sergeant'?'selected':''}>Sergeant</option>
                         <option ${data[1]=='Senior Sergeant'?'selected':''}>Senior Sergeant</option>
@@ -1563,9 +1912,9 @@
                         <option ${data[1]=='Captain'?'selected':''}>Captain</option>
                     </select>
                 </td>
-                <td><input type="text" placeholder="E.G. SNIPER, MEDIC, TECH" value="${data[2]}"></td>
+                <td><input type="text" placeholder="E.G. SNIPER, MEDIC, TECH" value="${data[2]}" ${disabledAttrPersonnelRelations}></td>
                 <td>
-                    <select>
+                    <select ${disabledAttrPersonnelRelations}>
                         <option ${status=='Active'?'selected':''}>Active</option>
                         <option ${status=='On Leave'?'selected':''}>On Leave</option>
                     </select>
@@ -1586,16 +1935,16 @@
         } else if (currentTab === "Relations") {
             const data = rowData || ["", "Neutral", ""];
             tr.innerHTML = `
-                <td><input type="text" placeholder="FACTION NAME" value="${data[0]}"></td>
+                <td><input type="text" placeholder="FACTION NAME" value="${data[0]}" ${disabledAttrPersonnelRelations}></td>
                 <td>
-                    <select>
+                    <select ${disabledAttrPersonnelRelations}>
                         <option ${data[1]=='Allied'?'selected':''}>Allied</option>
                         <option ${data[1]=='Neutral'?'selected':''}>Neutral</option>
                         <option ${data[1]=='Hostile'?'selected':''}>Hostile</option>
                         <option ${data[1]=='War'?'selected':''}>War</option>
                     </select>
                 </td>
-                <td><input type="text" placeholder="ROE / NOTES" value="${data[2]}"></td>
+                <td><input type="text" placeholder="ROE / NOTES" value="${data[2]}" ${disabledAttrPersonnelRelations}></td>
             `;
             const selectEl = tr.querySelector('select');
             updateRelationRowStyle(tr, selectEl.value);
@@ -1629,7 +1978,7 @@
                         </div>
                     </div>
                 </td>
-                <td class="actions-col" style="text-align:center;">
+                <td class="actions-col" style="text-align:center%;">
                     <button type="button" class="row-delete-btn" title="Remove entry">&times;</button>
                 </td>
             `;
@@ -1672,7 +2021,13 @@
         body.appendChild(tr);
     }
 
-    function addNewRow() { renderRow(); }
+    function addNewRow() {
+        if (!canEditTab(currentTab) && (currentTab === "Personnel" || currentTab === "Relations")) {
+            document.getElementById('sync-status').innerText = "READ-ONLY (USER MODE)";
+            return;
+        }
+        renderRow();
+    }
 
     function applyStalkerFilter() {
         const input = document.getElementById('stalker-search');
@@ -1891,6 +2246,7 @@
                                 frame.classList.add('pda-appear');
                                 setTimeout(() => frame.classList.remove('pda-appear'), 500);
                             }
+                            applyEditStateForCurrentTab();
                         }, 200);
                     }
                 }, 90);
@@ -1898,6 +2254,39 @@
         }
 
         stepLines();
+    }
+
+    function applyEditStateForCurrentTab() {
+        const canEdit = canEditTab(currentTab);
+        const table = document.getElementById('table-' + currentTab);
+        if (!table) return;
+
+        const fields = table.querySelectorAll('tbody input, tbody select');
+        fields.forEach(el => {
+            if (currentTab === "Personnel" || currentTab === "Relations") {
+                el.disabled = !canEdit;
+            } else {
+                el.disabled = false;
+            }
+        });
+
+        const delBtns = table.querySelectorAll('.row-delete-btn');
+        delBtns.forEach(btn => {
+            if (!canEdit && (currentTab === "Personnel" || currentTab === "Relations")) {
+                btn.disabled = true;
+                btn.style.display = "none";
+            } else {
+                btn.disabled = false;
+                btn.style.display = "";
+            }
+        });
+
+        const addBtn = document.getElementById('add-entry-btn');
+        if (addBtn) {
+            const lock = !canEdit && (currentTab === "Personnel" || currentTab === "Relations");
+            addBtn.disabled = lock;
+            addBtn.classList.toggle('disabled', lock);
+        }
     }
 
     function initClock() {
@@ -1938,9 +2327,6 @@
     }
 
     function startPDA() {
-        const startOverlay = document.getElementById('start-overlay');
-        if (startOverlay) startOverlay.style.display = 'none';
-
         const cover = document.getElementById('boot-cover');
         const bootEl = document.getElementById('boot-screen');
         if (cover) cover.style.display = 'block';
@@ -1958,9 +2344,43 @@
         initStalkerControls();
         scheduleGlitch();
         scheduleBacklightFlicker();
+        updateAccessIndicator();
 
         const startBtn = document.getElementById('start-btn');
-        if (startBtn) startBtn.addEventListener('click', startPDA);
+        if (startBtn) {
+            startBtn.addEventListener('click', () => {
+                const ctx = getAudioCtx();
+                if (ctx && ctx.state === "suspended") ctx.resume().catch(()=>{});
+                openPinModal();
+            });
+        }
+
+        const pinCancel = document.getElementById('pin-cancel');
+        const pinOk = document.getElementById('pin-ok');
+        const pinInput = document.getElementById('pin-input');
+
+        if (pinCancel) pinCancel.addEventListener('click', closePinModal);
+        if (pinOk) pinOk.addEventListener('click', handlePinSubmit);
+        if (pinInput) {
+            pinInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    handlePinSubmit();
+                } else if (e.key === 'Escape') {
+                    closePinModal();
+                }
+            });
+        }
+
+        const adminBtn = document.getElementById('admin-btn');
+        if (adminBtn) {
+            adminBtn.addEventListener('click', openAdminPinModal);
+        }
+
+        const adminCancel = document.getElementById('pin-admin-cancel');
+        const adminSave = document.getElementById('pin-admin-save');
+
+        if (adminCancel) adminCancel.addEventListener('click', closeAdminPinModal);
+        if (adminSave) adminSave.addEventListener('click', handleAdminPinSubmit);
     });
 </script>
 </body>

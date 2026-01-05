@@ -174,6 +174,82 @@
             box-shadow:
                 inset 0 0 0 1px #1a2223,
                 0 0 0 1px rgba(0,0,0,0.8);
+            transform-origin: center center;
+        }
+
+        /* Chromatic aberration on key chrome only */
+        .chroma-soft {
+            text-shadow:
+                -1px 0 0 rgba(255, 40, 40, 0.16),
+                 1px 0 0 rgba(0, 200, 255, 0.18);
+        }
+
+        /* Subtle screen noise overlay */
+        .screen-noise {
+            position: absolute;
+            inset: 6px;
+            border-radius: 10px;
+            pointer-events: none;
+            mix-blend-mode: soft-light;
+            opacity: 0.14;
+            background-image:
+                repeating-linear-gradient(
+                    0deg,
+                    rgba(255,255,255,0.05) 0px,
+                    rgba(255,255,255,0.05) 1px,
+                    transparent 1px,
+                    transparent 3px
+                ),
+                repeating-linear-gradient(
+                    90deg,
+                    rgba(0,0,0,0.16) 0px,
+                    rgba(0,0,0,0.16) 1px,
+                    transparent 1px,
+                    transparent 4px
+                );
+            animation: noise-move 7s steps(10) infinite;
+        }
+
+        @keyframes noise-move {
+            0%   { background-position: 0 0, 0 0; }
+            50%  { background-position: 14px 18px, -10px 16px; }
+            100% { background-position: 0 0, 0 0; }
+        }
+
+        /* Tiny glitch / tear effect */
+        .pda-os-frame.glitch {
+            animation: glitch-jitter 120ms ease-out;
+        }
+
+        .pda-os-frame.glitch::before,
+        .pda-os-frame.glitch::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 14%;
+            background: linear-gradient(
+                to bottom,
+                rgba(255,255,255,0.12),
+                rgba(0,0,0,0.3)
+            );
+            mix-blend-mode: screen;
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .pda-os-frame.glitch::before {
+            top: 22%;
+        }
+        .pda-os-frame.glitch::after {
+            bottom: 18%;
+        }
+
+        @keyframes glitch-jitter {
+            0%   { transform: translate(0, 0); }
+            30%  { transform: translate(1px, 0); }
+            60%  { transform: translate(-1px, 0); }
+            100% { transform: translate(0, 0); }
         }
 
         .title-bar {
@@ -850,7 +926,7 @@
             </div>
 
             <!-- TITLE BAR -->
-            <div class="title-bar">
+            <div class="title-bar chroma-soft">
                 <div class="title-left">
                     <div class="title-icon"></div>
                     <div>
@@ -868,7 +944,7 @@
             </div>
 
             <!-- NAVIGATION -->
-            <div class="pda-nav">
+            <div class="pda-nav chroma-soft">
                 <div class="nav-btn active" id="btn-Personnel" onclick="switchTab('Personnel')">PERSONNEL</div>
                 <div class="nav-btn" id="btn-Stalkers" onclick="switchTab('Stalkers')">STALKERS</div>
                 <div class="nav-btn" id="btn-Relations" onclick="switchTab('Relations')">FACTIONS</div>
@@ -940,6 +1016,9 @@
                     <span class="status-value">AGROPROM SAT-NET &bull; 92%</span>
                 </div>
             </div>
+
+            <!-- Subtle screen noise overlay (on top of UI, under overlays) -->
+            <div class="screen-noise"></div>
         </div>
     </div>
 </div>
@@ -1469,11 +1548,28 @@
         }, 500);
     }
 
+    // Glitch loop: very rare, very short
+    function scheduleGlitch() {
+        const frame = document.querySelector('.pda-os-frame');
+        if (!frame) return;
+
+        const delay = 15000 + Math.random() * 15000; // 15–30s
+        setTimeout(() => {
+            const boot = document.getElementById('boot-screen');
+            if (!boot || boot.style.display === 'none') {
+                frame.classList.add('glitch');
+                setTimeout(() => frame.classList.remove('glitch'), 120);
+            }
+            scheduleGlitch();
+        }, delay);
+    }
+
     window.addEventListener('load', () => {
         boot();
         initClock();
         initSignalBars();
         initStalkerControls();
+        scheduleGlitch();
     });
 </script>
 </body>

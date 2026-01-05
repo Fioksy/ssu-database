@@ -5,7 +5,6 @@
     <title>Field PDA v4.6 - FIELD UNIT</title>
     <style>
         :root {
-            /* UI colours (early 2000s OS vibe) */
             --os-bg: #1b2627;
             --os-panel: #202b2d;
             --os-panel-alt: #263335;
@@ -16,15 +15,11 @@
             --os-text-main: #d7f0de;
             --os-text-muted: #9ab2a0;
             --os-text-warning: #ffdd88;
-
-            /* Fonts */
             --sys-font: 'Tahoma', 'MS Sans Serif', 'Segoe UI', sans-serif;
             --bios-font: 'Consolas', 'Lucida Console', 'Courier New', monospace;
         }
 
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
 
         body {
             background: radial-gradient(circle at top, #252b2e 0%, #050608 55%, #020203 100%);
@@ -38,10 +33,9 @@
             color: var(--os-text-main);
         }
 
-        /* PNG SHELL */
         .pda-chassis {
             position: relative;
-            width: 1024px;   /* native PNG size */
+            width: 1024px;
             height: 702px;
             background: url("pda_background.png") no-repeat center center;
             background-size: contain;
@@ -50,7 +44,6 @@
             align-items: center;
         }
 
-        /* SCREEN AREA INSIDE SHELL */
         .pda-screen {
             position: absolute;
             left: 85px;
@@ -427,9 +420,7 @@
                 0 0 0 1px rgba(0,0,0,0.9);
         }
 
-        .stalker-toolbar input::placeholder {
-            color: #4c5f57;
-        }
+        .stalker-toolbar input::placeholder { color: #4c5f57; }
 
         table {
             width: 100%;
@@ -461,10 +452,7 @@
             text-align: center;
         }
 
-        #table-Stalkers thead th:not(.actions-col) {
-            cursor: pointer;
-            user-select: none;
-        }
+        #table-Stalkers thead th:not(.actions-col) { cursor: pointer; user-select: none; }
 
         td {
             border-bottom: 1px solid #111618;
@@ -645,7 +633,6 @@
 
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
-        /* BIOS COVER */
         #boot-cover {
             position: fixed;
             inset: 0;
@@ -655,7 +642,6 @@
             display: none;
         }
 
-        /* BIOS SCREEN */
         #boot-screen {
             position: fixed;
             inset: 0;
@@ -754,7 +740,6 @@
             }
         }
 
-        /* START OVERLAY */
         #start-overlay {
             position: fixed;
             inset: 0;
@@ -784,10 +769,10 @@
             align-items: center;
         }
 
-        /* NEW: mid-2000s style app icon using the UA flag image */
+        /* bigger icon now */
         .start-icon {
-            width: 56px;
-            height: 56px;
+            width: 72px;
+            height: 72px;
             border-radius: 10px;
             padding: 4px;
             background: linear-gradient(to bottom, #3b4c60, #1b2633);
@@ -799,7 +784,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 16px;
+            margin-bottom: 18px;
         }
 
         .start-icon-inner {
@@ -813,11 +798,11 @@
 
         .start-icon-img {
             position: absolute;
-            inset: 8px;
+            inset: 10px;
             width: auto;
             height: auto;
-            max-width: calc(100% - 16px);
-            max-height: calc(100% - 16px);
+            max-width: calc(100% - 20px);
+            max-height: calc(100% - 20px);
             object-fit: contain;
             filter: drop-shadow(0 1px 2px rgba(0,0,0,0.6));
         }
@@ -827,8 +812,8 @@
             width: 5px;
             height: 5px;
             border-radius: 50%;
-            bottom: 7px;
-            right: 7px;
+            bottom: 8px;
+            right: 8px;
             background: radial-gradient(circle at 30% 30%, #8cff9a 0, #2a5b31 70%, #041108 100%);
             box-shadow:
                 0 0 3px rgba(150, 255, 180, 0.9),
@@ -934,9 +919,7 @@
             color: #ff6666;
         }
 
-        #error-text {
-            font-family: var(--bios-font);
-        }
+        #error-text { font-family: var(--bios-font); }
 
         #table-Relations tbody tr.relation-allied input,
         #table-Relations tbody tr.relation-allied select {
@@ -1105,7 +1088,6 @@
 </head>
 <body>
 
-<!-- START / LAUNCH OVERLAY -->
 <div id="start-overlay">
     <div class="start-panel">
         <div class="start-icon">
@@ -1118,7 +1100,6 @@
     </div>
 </div>
 
-<!-- BIOS black cover + boot overlay -->
 <div id="boot-cover"></div>
 
 <div id="boot-screen">
@@ -1132,7 +1113,6 @@
 <div class="pda-chassis">
     <div class="pda-screen">
         <div class="pda-os-frame">
-            <!-- UPLINK overlay -->
             <div id="uplink-overlay">
                 <div>
                     <div class="buffer-wheel"></div>
@@ -1140,7 +1120,6 @@
                 </div>
             </div>
 
-            <!-- ERROR overlay -->
             <div id="error-overlay">
                 <div>
                     <div id="error-title">SIGNAL LOST</div>
@@ -1148,7 +1127,6 @@
                 </div>
             </div>
 
-            <!-- TITLE BAR -->
             <div class="title-bar chroma-soft">
                 <div class="title-left">
                     <div class="title-icon"></div>
@@ -1159,21 +1137,19 @@
                 </div>
                 <div class="title-right">
                     <span class="zone-tag">SECTOR 04 • ONLINE</span>
-                    <button class="icon-btn" id="refresh-btn" onclick="loadFromCloud(true)" title="Refresh / Force Sync">
+                    <button class="icon-btn" id="refresh-btn" onclick="refreshWithSound()" title="Refresh / Force Sync">
                         <span class="refresh-icon">&#10227;</span>
                     </button>
                     <span id="pda-clock">--:--:--</span>
                 </div>
             </div>
 
-            <!-- NAVIGATION -->
             <div class="pda-nav chroma-soft">
                 <div class="nav-btn active" id="btn-Personnel" onclick="switchTab('Personnel')">PERSONNEL</div>
                 <div class="nav-btn" id="btn-Stalkers" onclick="switchTab('Stalkers')">STALKERS</div>
                 <div class="nav-btn" id="btn-Relations" onclick="switchTab('Relations')">FACTIONS</div>
             </div>
 
-            <!-- MAIN DATA VIEWPORT -->
             <div class="viewport">
                 <div id="stalker-toolbar" class="stalker-toolbar">
                     <span>FILTER:</span>
@@ -1218,14 +1194,12 @@
                 </table>
             </div>
 
-            <!-- ACTION BAR -->
             <div class="action-bar">
                 <button class="gloss-btn" onclick="addNewRow()">+ ADD NEW ENTRY</button>
                 <div style="flex-grow:1"></div>
                 <button class="gloss-btn commit-btn" onclick="saveToCloud()">COMMIT TO DATABASE</button>
             </div>
 
-            <!-- STATUS BAR -->
             <div class="status-footer">
                 <div class="status-left">
                     <span id="status-spinner" class="buffer-wheel" style="display:none;"></span>
@@ -1241,17 +1215,13 @@
                 </div>
             </div>
 
-            <!-- internal screen effects -->
             <div class="screen-vignette"></div>
             <div id="low-signal-overlay" class="low-signal-overlay"></div>
             <div id="backlight-flicker" class="backlight-flicker"></div>
             <div class="screen-noise"></div>
         </div>
 
-        <!-- cracked glass overlay -->
         <div class="screen-cracks"></div>
-
-        <!-- GLASS GRIME OVERLAYS -->
         <div class="screen-overlay screen-dirt"></div>
         <div class="screen-overlay screen-scratches"></div>
     </div>
@@ -1339,6 +1309,33 @@
 
         osc.start(now);
         osc.stop(now + 0.06);
+    }
+
+    // NEW: more mechanical/confirmation style for refresh
+    function playRefreshClick() {
+        const ctx = getAudioCtx();
+        if (!ctx) return;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        osc.type = "triangle";
+        osc.frequency.value = 950;
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        const now = ctx.currentTime;
+        gain.gain.setValueAtTime(0.08, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+
+        osc.start(now);
+        osc.stop(now + 0.15);
+    }
+
+    // wrapper so refresh button plays sound then reloads
+    function refreshWithSound() {
+        playRefreshClick();
+        loadFromCloud(true);
     }
 
     function updateSignalBars() {

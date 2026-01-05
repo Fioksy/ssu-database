@@ -2,20 +2,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>SSU PDA v4.0 - FIELD UNIT</title>
+    <title>SSU PDA v4.5 - LANDSCAPE UNIT</title>
     <style>
         :root {
-            --pda-silver: #d4d4d4;
-            --pda-dark-silver: #a0a0a0;
-            --pda-screen-bg: #f0f0f0;
-            --win-blue: #005a9e;
-            --win-dark: #333;
+            --pda-shell: #444b4d;
+            --win-blue: #0055cc;
+            --glass-grad: linear-gradient(to bottom, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.1) 50%, rgba(0,0,0,0.1) 100%);
             --sys-font: 'Tahoma', 'Segoe UI', sans-serif;
             --bios-font: 'Courier New', monospace;
         }
 
         body { 
-            background-color: #1a1a1a; 
+            background-color: #121212; 
             font-family: var(--sys-font); 
             margin: 0; 
             display: flex; 
@@ -25,135 +23,160 @@
             overflow: hidden;
         }
 
-        /* PDA Handheld Chassis */
+        /* Landscape PDA Chassis */
         .pda-chassis {
-            width: 480px;
-            height: 800px;
-            background: linear-gradient(145deg, #e6e6e6, #999);
-            border: 4px solid #444;
-            border-radius: 40px;
-            padding: 20px;
-            box-shadow: 0 50px 100px rgba(0,0,0,0.8);
+            width: 900px;
+            height: 550px;
+            background: linear-gradient(145deg, #5a5f61, #2a2d2e);
+            border: 8px solid #1a1a1a;
+            border-radius: 30px;
+            padding: 25px;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.9), inset 0 0 10px rgba(255,255,255,0.2);
             display: flex;
             flex-direction: column;
             position: relative;
         }
 
-        /* The Internal Screen */
+        /* Screen Area */
         .pda-screen {
             flex-grow: 1;
-            background: var(--pda-screen-bg);
-            border: 10px solid #222;
-            border-radius: 10px;
+            background: #e6e9ed;
+            border: 6px solid #000;
+            border-radius: 5px;
             display: flex;
             flex-direction: column;
             overflow: hidden;
             position: relative;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.3);
         }
 
-        /* Portrait Title Bar */
+        /* Mid-2000s Glossy Title Bar */
         .title-bar {
-            background: var(--win-blue);
+            background: linear-gradient(to bottom, #4a90e2 0%, #0055cc 100%);
             color: white;
-            padding: 8px 12px;
+            padding: 6px 15px;
             font-weight: bold;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 14px;
+            border-bottom: 1px solid #003366;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
         }
 
-        /* Content Area optimized for Portrait */
+        /* Navigation Tabs */
+        .pda-nav {
+            display: flex;
+            background: #d1d7e0;
+            border-bottom: 2px solid #999;
+        }
+
+        .nav-btn {
+            padding: 10px 25px;
+            font-size: 11px;
+            font-weight: bold;
+            cursor: pointer;
+            border-right: 1px solid #aaa;
+            background: linear-gradient(to bottom, #eeeeee 0%, #cccccc 100%);
+            position: relative;
+            transition: 0.2s;
+        }
+
+        .nav-btn:hover { background: #f0f0f0; }
+        .nav-btn.active {
+            background: #ffffff;
+            color: var(--win-blue);
+            box-shadow: inset 0 3px 0 var(--win-blue);
+        }
+
+        /* Recessed Data Viewport */
         .viewport {
             flex-grow: 1;
             overflow-y: auto;
-            background: white;
-            margin: 5px;
-            border: 2px solid var(--pda-dark-silver);
+            background: #ffffff;
+            margin: 10px;
+            border: 2px solid #999;
+            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.1);
         }
 
         table { width: 100%; border-collapse: collapse; display: none; }
         table.active { display: table; }
+
+        /* Glossy Table Headers */
         th { 
-            background: #e1e1e1; 
-            border-bottom: 2px solid var(--win-dark); 
-            padding: 8px; 
-            font-size: 11px; 
-            text-align: left;
-            position: sticky; top: 0;
-        }
-        td { border-bottom: 1px solid #ddd; height: 40px; }
-        input { width: 100%; height: 100%; border: none; padding: 5px; font-size: 13px; }
-
-        /* PDA Tab Navigation (Icons/Buttons) */
-        .pda-nav {
-            display: flex;
-            background: #ddd;
-            border-top: 2px solid #999;
-            padding: 5px;
-            gap: 2px;
-        }
-        .nav-btn {
-            flex: 1;
-            background: #ccc;
-            border: 1px solid #777;
-            padding: 10px 2px;
-            font-size: 10px;
-            font-weight: bold;
-            cursor: pointer;
-            text-align: center;
-        }
-        .nav-btn.active { background: white; border-bottom: none; }
-
-        /* Hardware Buttons at bottom */
-        .hw-buttons {
-            display: flex;
-            justify-content: space-around;
-            padding-top: 15px;
-        }
-        .hw-btn {
-            width: 60px; height: 35px;
-            background: #777;
-            border-radius: 10px;
-            border: 2px solid #444;
-            box-shadow: inset 2px 2px 5px #999;
-        }
-
-        /* Status Bar with Buffer Animation */
-        .status-footer {
-            background: #eee;
-            padding: 4px 10px;
+            background: linear-gradient(to bottom, #f9f9f9 0%, #dcdcdc 100%);
+            border-bottom: 1px solid #888;
+            border-right: 1px solid #ccc;
+            padding: 10px;
             font-size: 11px;
-            border-top: 1px solid #ccc;
+            text-align: left;
+            color: #333;
+            position: sticky; top: 0;
+            z-index: 10;
+        }
+
+        /* Recessed Input Fields */
+        td { border-bottom: 1px solid #eee; border-right: 1px solid #eee; padding: 4px; }
+        input, select { 
+            width: 100%; 
+            height: 30px; 
+            border: 1px solid #ccc; 
+            padding: 4px; 
+            font-size: 12px; 
+            background: #fafafa;
+            border-radius: 3px;
+            box-shadow: inset 1px 1px 2px rgba(0,0,0,0.05);
+        }
+        input:focus, select:focus { background: #fff; border-color: var(--win-blue); outline: none; box-shadow: 0 0 5px rgba(0,85,204,0.3); }
+
+        /* Glossy Buttons */
+        .action-bar { padding: 10px; background: #d1d7e0; display: flex; gap: 10px; border-top: 1px solid #aaa; }
+        .gloss-btn {
+            background: linear-gradient(to bottom, #ffffff 0%, #d4d4d4 100%);
+            border: 1px solid #888;
+            padding: 8px 15px;
+            font-weight: bold;
+            font-size: 11px;
+            border-radius: 4px;
+            cursor: pointer;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .gloss-btn:active { background: #bbb; box-shadow: inset 0 1px 3px rgba(0,0,0,0.2); }
+        .commit-btn { background: linear-gradient(to bottom, #74c774 0%, #2d8a2d 100%); color: white; border-color: #1a5a1a; }
+
+        /* STATUS / BUFFERRING */
+        .status-footer {
+            background: #333;
+            color: #ccc;
+            padding: 5px 15px;
+            font-size: 10px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        .buffering {
+        .buffer-wheel {
             display: inline-block;
             width: 10px; height: 10px;
-            border: 2px solid #999;
-            border-top: 2px solid var(--win-blue);
+            border: 2px solid #555;
+            border-top: 2px solid #fff;
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin-right: 5px;
+            margin-right: 8px;
         }
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
-        /* Updated BIOS */
+        /* BIOS BOOT */
         #boot-screen { 
             position: absolute; top:0; left:0; width:100%; height:100%; 
             background: #000; color: #fff; font-family: var(--bios-font); 
-            padding: 20px; z-index: 1000; box-sizing: border-box; 
+            padding: 30px; z-index: 5000; box-sizing: border-box; 
         }
-        .progress-box { width: 100%; border: 1px solid #fff; height: 15px; margin-top: 20px; }
-        #progress-bar { width: 0%; background: #fff; height: 100%; }
+        .bios-bar-container { width: 100%; border: 1px solid #fff; height: 12px; margin-top: 20px; }
+        #bios-bar-fill { width: 0%; background: #fff; height: 100%; }
 
-        /* Transmission Overlay */
         #uplink-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(255,255,255,0.8);
-            display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 500;
+            background: rgba(0,0,0,0.6);
+            display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 4000;
         }
     </style>
 </head>
@@ -162,47 +185,53 @@
 <div class="pda-chassis">
     <div class="pda-screen">
         <div id="boot-screen">
-            <div id="boot-log" style="font-size: 12px;"></div>
-            <div class="progress-box"><div id="progress-bar"></div></div>
+            <div id="boot-log" style="font-size: 14px; line-height: 1.5;"></div>
+            <div class="bios-bar-container"><div id="bios-bar-fill"></div></div>
         </div>
 
         <div id="uplink-overlay">
-            <div class="buffering" style="width:30px; height:30px; border-width:4px;"></div>
-            <p><b>SYNCING DATA...</b></p>
+            <div style="background:white; padding: 20px; border: 3px solid #0055cc; text-align: center; border-radius: 8px;">
+                <div class="buffer-wheel" style="width:20px; height:20px; border-width:3px;"></div>
+                <p><b>SYNCHRONIZING WITH SSU UPLINK...</b></p>
+            </div>
         </div>
 
         <div class="title-bar">
-            <span>SSU_PDA_v4.0</span>
-            <span id="pda-clock">00:00</span>
+            <span>SSU FIELD UNIT :: TACTICAL INTERFACE</span>
+            <span id="pda-clock">--:--</span>
         </div>
 
         <div class="pda-nav">
-            <div class="nav-btn active" id="btn-Personnel" onclick="switchTab('Personnel')">PERSONNEL</div>
+            <div class="nav-btn active" id="btn-Personnel" onclick="switchTab('Personnel')">PERSONNEL DB</div>
             <div class="nav-btn" id="btn-Stalkers" onclick="switchTab('Stalkers')">WATCHLIST</div>
-            <div class="nav-btn" id="btn-Relations" onclick="switchTab('Relations')">RELATIONS</div>
+            <div class="nav-btn" id="btn-Relations" onclick="switchTab('Relations')">FACTION DATA</div>
         </div>
 
         <div class="viewport">
-            <table id="table-Personnel" class="active"><thead><tr><th>CALLSIGN</th><th>RANK</th><th>SPEC</th></tr></thead><tbody></tbody></table>
-            <table id="table-Stalkers"><thead><tr><th>ALIAS</th><th>THREAT</th><th>LOC</th></tr></thead><tbody></tbody></table>
-            <table id="table-Relations"><thead><tr><th>FACTION</th><th>STATUS</th><th>ROE</th></tr></thead><tbody></tbody></table>
+            <table id="table-Personnel" class="active">
+                <thead><tr><th>CALLSIGN</th><th>RANK</th><th>SPEC</th><th>STATUS</th></tr></thead>
+                <tbody></tbody>
+            </table>
+            <table id="table-Stalkers">
+                <thead><tr><th>ALIAS</th><th>THREAT</th><th>LOCATION</th><th>DIRECTIVES</th></tr></thead>
+                <tbody></tbody>
+            </table>
+            <table id="table-Relations">
+                <thead><tr><th>FACTION</th><th>STATUS</th><th>ROE</th></tr></thead>
+                <tbody></tbody>
+            </table>
         </div>
 
-        <div style="padding: 10px; background: #ddd; display: flex; gap: 10px;">
-            <button onclick="addNewRow()" style="flex:1; padding:8px;">+ NEW ENTRY</button>
-            <button onclick="saveToCloud()" style="flex:1; padding:8px; background:var(--win-blue); color:white; border:none;">COMMIT</button>
+        <div class="action-bar">
+            <button class="gloss-btn" onclick="addNewRow()">+ ADD NEW RECORD</button>
+            <div style="flex-grow:1"></div>
+            <button class="gloss-btn commit-btn" onclick="saveToCloud()">COMMIT TO DATABASE</button>
         </div>
 
         <div class="status-footer">
-            <div><span id="buffer-icon" class="buffering" style="display:none;"></span>STATUS: <span id="sync-status">IDLE</span></div>
-            <div>BATT: 88%</div>
+            <div><span id="status-spinner" class="buffer-wheel" style="display:none;"></span>STATUS: <span id="sync-status">READY</span></div>
+            <div>SIGNAL: ||||| | 92%</div>
         </div>
-    </div>
-
-    <div class="hw-buttons">
-        <div class="hw-btn"></div>
-        <div class="hw-btn" style="width:80px; height:45px; border-radius: 50%;"></div>
-        <div class="hw-btn"></div>
     </div>
 </div>
 
@@ -220,23 +249,23 @@
     }
 
     async function loadFromCloud() {
-        document.getElementById('sync-status').innerText = "DOWNLOADING";
-        document.getElementById('buffer-icon').style.display = 'inline-block';
+        document.getElementById('sync-status').innerText = "FETCHING";
+        document.getElementById('status-spinner').style.display = 'inline-block';
         try {
             const response = await fetch(`${UPLINK_URL}?sheet=${currentTab}`);
             const data = await response.json();
             const body = document.querySelector(`#table-${currentTab} tbody`);
             body.innerHTML = "";
             data.forEach(rowData => renderRow(rowData));
-            document.getElementById('sync-status').innerText = "CONNECTED";
+            document.getElementById('sync-status').innerText = "SYNCHRONIZED";
         } catch (e) { document.getElementById('sync-status').innerText = "OFFLINE"; }
-        document.getElementById('buffer-icon').style.display = 'none';
+        document.getElementById('status-spinner').style.display = 'none';
     }
 
     async function saveToCloud() {
         document.getElementById('uplink-overlay').style.display = 'flex';
         const rows = Array.from(document.querySelectorAll(`#table-${currentTab} tbody tr`)).map(tr => {
-            return Array.from(tr.querySelectorAll('input')).map(input => input.value);
+            return Array.from(tr.querySelectorAll('input, select')).map(el => el.value);
         });
 
         try {
@@ -248,50 +277,67 @@
                 document.getElementById('uplink-overlay').style.display = 'none';
                 loadFromCloud();
             }, 1000);
-        } catch (e) { 
-            document.getElementById('uplink-overlay').style.display = 'none';
-        }
+        } catch (e) { document.getElementById('uplink-overlay').style.display = 'none'; }
     }
 
     function renderRow(rowData = null) {
         const body = document.querySelector(`#table-${currentTab} tbody`);
         const tr = document.createElement('tr');
-        const colCount = document.querySelectorAll(`#table-${currentTab} th`).length;
-        const data = rowData || new Array(colCount).fill("");
-        data.forEach(val => {
-            const td = document.createElement('td');
-            td.innerHTML = `<input type="text" value="${val}">`;
-            tr.appendChild(td);
-        });
+        
+        if (currentTab === "Personnel") {
+            const data = rowData || ["", "Private", "", "Active"];
+            tr.innerHTML = `
+                <td><input type="text" value="${data[0]}"></td>
+                <td><select><option ${data[1]=='Private'?'selected':''}>Private</option><option ${data[1]=='Sergeant'?'selected':''}>Sergeant</option><option ${data[1]=='Lieutenant'?'selected':''}>Lieutenant</option><option ${data[1]=='Captain'?'selected':''}>Captain</option><option ${data[1]=='Major'?'selected':''}>Major</option></select></td>
+                <td><input type="text" value="${data[2]}"></td>
+                <td><select><option ${data[3]=='Active'?'selected':''}>Active</option><option ${data[3]=='MIA'?'selected':''}>MIA</option><option ${data[3]=='KIA'?'selected':''}>KIA</option><option ${data[3]=='Deserted'?'selected':''}>Deserted</option></select></td>
+            `;
+        } else if (currentTab === "Relations") {
+            const data = rowData || ["", "Neutral", ""];
+            tr.innerHTML = `
+                <td><input type="text" value="${data[0]}"></td>
+                <td><select><option ${data[1]=='Allied'?'selected':''}>Allied</option><option ${data[1]=='Neutral'?'selected':''}>Neutral</option><option ${data[1]=='Hostile'?'selected':''}>Hostile</option><option ${data[1]=='War'?'selected':''}>War</option></select></td>
+                <td><input type="text" value="${data[2]}"></td>
+            `;
+        } else {
+            const colCount = document.querySelectorAll(`#table-${currentTab} th`).length;
+            const data = rowData || new Array(colCount).fill("");
+            data.forEach(val => {
+                const td = document.createElement('td');
+                td.innerHTML = `<input type="text" value="${val}">`;
+                tr.appendChild(td);
+            });
+        }
         body.appendChild(tr);
     }
 
     function addNewRow() { renderRow(); }
 
-    // BIOS Script with White Loading Bar
-    const logLines = ["PDA BOOT v4.0", "KERNEL LOADED", "UPLINK MODULE: OK", "SYNCING RTC...", "LOGGING IN..."];
-    let l = 0;
-    function runBoot() {
+    // BIOS Boot Logic
+    const logArr = ["SSU TACTICAL BOOTLOADER 4.5", "PROCESSOR: INTEL ATOM N270 @ 1.6GHz", "MEMORY: 1024MB SDRAM OK", "UPLINK: SATELLITE CONNECTION FOUND", "LOADING SSU OS..."];
+    let idx = 0;
+    function boot() {
         const log = document.getElementById('boot-log');
-        if(l < logLines.length) {
-            log.innerHTML += "> " + logLines[l] + "<br>";
-            l++; setTimeout(runBoot, 300);
+        if(idx < logArr.length) {
+            log.innerHTML += "> " + logArr[idx] + "<br>";
+            idx++; setTimeout(boot, 400);
         } else {
             let p = 0;
-            const bar = document.getElementById('progress-bar');
-            const int = setInterval(() => {
-                p += 5; bar.style.width = p + "%";
+            const bar = document.getElementById('bios-bar-fill');
+            const itv = setInterval(() => {
+                p += 4; bar.style.width = p + "%";
                 if(p >= 100) {
-                    clearInterval(int);
+                    clearInterval(itv);
                     loadFromCloud().then(() => document.getElementById('boot-screen').style.display='none');
                 }
-            }, 50);
+            }, 60);
         }
     }
-    window.onload = runBoot;
+
+    window.onload = boot;
     setInterval(() => {
-        const now = new Date();
-        document.getElementById('pda-clock').innerText = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
+        const d = new Date();
+        document.getElementById('pda-clock').innerText = d.getHours().toString().padStart(2,'0') + ":" + d.getMinutes().toString().padStart(2,'0');
     }, 1000);
 </script>
 </body>

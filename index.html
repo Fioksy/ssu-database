@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>PDA v4.6 - FIELD UNIT</title>
+    <title>Field PDA v4.6 - FIELD UNIT</title>
     <style>
         :root {
             --os-bg: #1b2627;
@@ -1252,7 +1252,7 @@
 <!-- PIN LOGIN (BIOS STYLE) -->
 <div id="pin-modal">
     <div class="pin-panel">
-        <div class="pin-title">DATABASE LOGIN</div>
+        <div class="pin-title">FIELD TERMINAL AUTH</div>
         <div class="pin-subtitle">ENTER ACCESS PIN</div>
         <input id="pin-input" type="password" maxlength="8" autocomplete="off" inputmode="numeric">
         <div id="pin-error" class="pin-error"></div>
@@ -1266,8 +1266,8 @@
 <!-- ADMIN PIN CHANGE (ADMIN ONLY) -->
 <div id="pin-admin-modal">
     <div class="pin-panel">
-        <div class="pin-title">ADMIN MENU</div>
-        <div class="pin-subtitle">UPDATE ACCESS PINS</div>
+        <div class="pin-title">ADMIN SECURITY MENU</div>
+        <div class="pin-subtitle">UPDATE FIELD ACCESS PINS</div>
 
         <div class="pin-field-label">NEW USER PIN <span style="color:#cccccc;">(optional)</span></div>
         <input id="new-user-pin" type="password" maxlength="8" autocomplete="off" inputmode="numeric">
@@ -1275,6 +1275,7 @@
         <div class="pin-field-label">NEW ADMIN PIN <span style="color:#cccccc;">(optional)</span></div>
         <input id="new-admin-pin" type="password" maxlength="8" autocomplete="off" inputmode="numeric">
 
+        <div class="pin-note">LEAVE FIELD BLANK TO KEEP CURRENT VALUE.</div>
 
         <div id="pin-admin-error" class="pin-error"></div>
 
@@ -1418,10 +1419,36 @@
 </div>
 
 <script>
-    // IMPORTANT: replace with your deployed Apps Script URL if different
+    // Replace with your own Apps Script URL if needed
     const UPLINK_URL = "https://script.google.com/macros/s/AKfycbyqfwn91pnhsTSG2mlPIG1X9OSpPwnnk_ur3JtpOMtxzwVR1I4iR4jFwxEgSj2Xg_VR/exec";
 
     let accessLevel = "guest"; // 'guest' | 'user' | 'admin'
+
+    // Custom sound mapping
+    const sounds = {
+        boot:    new Audio('synth03.ogg'),
+        tab:     new Audio('click01.ogg'),
+        refresh: new Audio('click07.ogg'),
+        button:  new Audio('click04.ogg'),
+        commit:  new Audio('beep04.ogg'),
+        radio:   new Audio('radio02.ogg')
+    };
+
+    Object.keys(sounds).forEach(k => {
+        sounds[k].preload = 'auto';
+        sounds[k].volume = 0.7;
+    });
+
+    function playSound(name) {
+        const snd = sounds[name];
+        if (!snd) return;
+        try {
+            snd.currentTime = 0;
+            snd.play();
+        } catch (e) {
+            // ignore
+        }
+    }
 
     function canEditTab(tabName) {
         if (accessLevel === "admin") return true;
@@ -1466,6 +1493,7 @@
         const pin = (input.value || "").trim();
         if (!pin) {
             error.textContent = "PIN REQUIRED";
+            playSound('commit');
             return;
         }
 
@@ -1493,10 +1521,12 @@
                 startPDA();
             } else {
                 error.textContent = "LOGIN FAILED: INCORRECT PIN";
+                playSound('commit'); // error beep
             }
         } catch (e) {
             console.error(e);
             error.textContent = "AUTH ERROR";
+            playSound('commit');
         }
     }
 
@@ -1533,6 +1563,7 @@
         if (!newUserPin && !newAdminPin) {
             err.textContent = "NO CHANGES SPECIFIED";
             err.style.color = "#ff8080";
+            playSound('commit');
             return;
         }
 
@@ -1553,19 +1584,22 @@
             if (data.status === "OK") {
                 err.style.color = "#c0ffc0";
                 err.textContent = "PINS UPDATED OK";
+                playSound('commit');
                 setTimeout(closeAdminPinModal, 800);
             } else {
                 err.style.color = "#ff8080";
                 err.textContent = "UPDATE FAILED";
+                playSound('commit');
             }
         } catch (e) {
             console.error(e);
             err.style.color = "#ff8080";
             err.textContent = "NETWORK ERROR";
+            playSound('commit');
         }
     }
 
-    // --- EXISTING APP LOGIC ---
+    // --- MAIN APP LOGIC ---
 
     let currentTab = "Personnel";
     const sheetCache = { Personnel: null, Stalkers: null, Relations: null };
@@ -1578,98 +1612,8 @@
 
     let stalkerSortState = { column: null, direction: 'asc' };
 
-    function getAudioCtx() {
-        const AudioCtx = window.AudioContext || window.webkitAudioContext;
-        if (!AudioCtx) return null;
-        if (!window._pdaAudioCtx) {
-            window._pdaAudioCtx = new AudioCtx();
-        }
-        return window._pdaAudioCtx;
-    }
-
-    function playBootSound() {
-        const ctx = getAudioCtx();
-        if (!ctx) return;
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-
-        osc.type = "square";
-        osc.frequency.value = 420;
-
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-
-        const now = ctx.currentTime;
-        gain.gain.setValueAtTime(0.2, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
-
-        osc.start(now);
-        osc.stop(now + 0.3);
-    }
-
-    function playBootChime() {
-        const ctx = getAudioCtx();
-        if (!ctx) return;
-        const now = ctx.currentTime;
-
-        function note(freq, start, dur, vol) {
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-            osc.type = "sine";
-            osc.frequency.setValueAtTime(freq, now + start);
-            osc.connect(gain);
-            gain.connect(ctx.destination);
-            gain.gain.setValueAtTime(vol, now + start);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + start + dur);
-            osc.start(now + start);
-            osc.stop(now + start + dur + 0.05);
-        }
-
-        note(740, 0.00, 0.20, 0.15);
-        note(1040, 0.16, 0.22, 0.13);
-    }
-
-    function playTabClick() {
-        const ctx = getAudioCtx();
-        if (!ctx) return;
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-
-        osc.type = "square";
-        osc.frequency.value = 2100;
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-
-        const now = ctx.currentTime;
-        gain.gain.setValueAtTime(0.05, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
-
-        osc.start(now);
-        osc.stop(now + 0.06);
-    }
-
-    function playRefreshClick() {
-        const ctx = getAudioCtx();
-        if (!ctx) return;
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-
-        osc.type = "triangle";
-        osc.frequency.value = 950;
-
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-
-        const now = ctx.currentTime;
-        gain.gain.setValueAtTime(0.08, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
-
-        osc.start(now);
-        osc.stop(now + 0.15);
-    }
-
     function refreshWithSound() {
-        playRefreshClick();
+        playSound('refresh');
         loadFromCloud(true);
     }
 
@@ -1716,6 +1660,8 @@
         currentSignal = 0;
         updateSignalBars();
 
+        playSound('commit'); // error beep
+
         overlay.style.display = 'flex';
         setTimeout(() => { overlay.style.display = 'none'; }, 2300);
     }
@@ -1750,6 +1696,7 @@
         }
 
         btn.addEventListener('click', () => {
+            playSound('button');
             const labelInput = tr.querySelector(`td:nth-child(${labelFieldIndex + 1}) input`);
             const label = labelInput && labelInput.value.trim()
                 ? labelInput.value.trim()
@@ -1760,7 +1707,7 @@
     }
 
     async function switchTab(tabName) {
-        playTabClick();
+        playSound('tab');
         currentTab = tabName;
 
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -1820,6 +1767,8 @@
     }
 
     async function saveToCloud() {
+        playSound('commit');
+
         if (currentTab === "Stalkers") {
             const stalkerRows = Array.from(document.querySelectorAll('#table-Stalkers tbody tr'));
             let hasMissingAlias = false;
@@ -1835,6 +1784,7 @@
         }
 
         document.getElementById('uplink-overlay').style.display = 'flex';
+        playSound('radio');
 
         const rows = Array.from(document.querySelectorAll(`#table-${currentTab} tbody tr`)).map(tr =>
             Array.from(tr.querySelectorAll('input, select')).map(el => el.value)
@@ -1977,7 +1927,7 @@
                         </div>
                     </div>
                 </td>
-                <td class="actions-col" style="text-align:center%;">
+                <td class="actions-col" style="text-align:center;">
                     <button type="button" class="row-delete-btn" title="Remove entry">&times;</button>
                 </td>
             `;
@@ -1990,11 +1940,13 @@
 
             const repInput = tr.querySelector('.rep-value');
             tr.querySelector('.rep-inc').addEventListener('click', () => {
+                playSound('button');
                 let v = parseInt(repInput.value || "0", 10);
                 if (isNaN(v)) v = 0;
                 repInput.value = v + 100;
             });
             tr.querySelector('.rep-dec').addEventListener('click', () => {
+                playSound('button');
                 let v = parseInt(repInput.value || "0", 10);
                 if (isNaN(v)) v = 0;
                 repInput.value = v - 100;
@@ -2023,8 +1975,10 @@
     function addNewRow() {
         if (!canEditTab(currentTab) && (currentTab === "Personnel" || currentTab === "Relations")) {
             document.getElementById('sync-status').innerText = "READ-ONLY (USER MODE)";
+            playSound('commit');
             return;
         }
+        playSound('button');
         renderRow();
     }
 
@@ -2160,7 +2114,6 @@
     const logoEndIndex = logoStartIndex + logoArt.length - 1;
 
     let idxBoot = 0;
-    let bootSoundPlayed = false;
     let logoWrapper = null;
 
     function boot() {
@@ -2168,13 +2121,6 @@
         log.innerHTML = "";
         idxBoot = 0;
         logoWrapper = null;
-
-        if (!bootSoundPlayed) {
-            const ctx = getAudioCtx();
-            if (ctx && ctx.state === "suspended") ctx.resume().catch(()=>{});
-            playBootSound();
-            bootSoundPlayed = true;
-        }
 
         function stepLines() {
             if (idxBoot < logArr.length) {
@@ -2238,7 +2184,8 @@
                             const cover = document.getElementById('boot-cover');
                             if (cover) cover.style.display = 'none';
 
-                            playBootChime();
+                            // Play your synth boot sound as the PDA UI appears
+                            playSound('boot');
 
                             const frame = document.querySelector('.pda-os-frame');
                             if (frame) {
@@ -2331,9 +2278,6 @@
         if (cover) cover.style.display = 'block';
         if (bootEl) bootEl.style.display = 'flex';
 
-        const ctx = getAudioCtx();
-        if (ctx && ctx.state === "suspended") ctx.resume().catch(()=>{});
-
         boot();
     }
 
@@ -2348,8 +2292,7 @@
         const startBtn = document.getElementById('start-btn');
         if (startBtn) {
             startBtn.addEventListener('click', () => {
-                const ctx = getAudioCtx();
-                if (ctx && ctx.state === "suspended") ctx.resume().catch(()=>{});
+                playSound('button');
                 openPinModal();
             });
         }
@@ -2358,8 +2301,14 @@
         const pinOk = document.getElementById('pin-ok');
         const pinInput = document.getElementById('pin-input');
 
-        if (pinCancel) pinCancel.addEventListener('click', closePinModal);
-        if (pinOk) pinOk.addEventListener('click', handlePinSubmit);
+        if (pinCancel) pinCancel.addEventListener('click', () => {
+            playSound('button');
+            closePinModal();
+        });
+        if (pinOk) pinOk.addEventListener('click', () => {
+            playSound('button');
+            handlePinSubmit();
+        });
         if (pinInput) {
             pinInput.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter') {
@@ -2372,16 +2321,23 @@
 
         const adminBtn = document.getElementById('admin-btn');
         if (adminBtn) {
-            adminBtn.addEventListener('click', openAdminPinModal);
+            adminBtn.addEventListener('click', () => {
+                playSound('button');
+                openAdminPinModal();
+            });
         }
 
         const adminCancel = document.getElementById('pin-admin-cancel');
         const adminSave = document.getElementById('pin-admin-save');
 
-        if (adminCancel) adminCancel.addEventListener('click', closeAdminPinModal);
-        if (adminSave) adminSave.addEventListener('click', handleAdminPinSubmit);
+        if (adminCancel) adminCancel.addEventListener('click', () => {
+            playSound('button');
+            closeAdminPinModal();
+        });
+        if (adminSave) adminSave.addEventListener('click', () => {
+            handleAdminPinSubmit();
+        });
     });
 </script>
 </body>
 </html>
-

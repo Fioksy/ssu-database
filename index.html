@@ -1124,12 +1124,23 @@
                 0 0 0 1px rgba(0,0,0,0.8);
         }
 
+        /* EXISTING: wanted = red */
         #table-Stalkers tbody tr.stalker-wanted input,
         #table-Stalkers tbody tr.stalker-wanted select {
             background: radial-gradient(circle at 50% 0%, #6b3232 0, #2a1212 80%);
             border-color: #c97373;
             box-shadow:
                 inset 0 0 0 1px #3b1818,
+                0 0 0 1px rgba(0,0,0,0.8);
+        }
+
+        /* NEW: collaborator = green */
+        #table-Stalkers tbody tr.stalker-collaborator input,
+        #table-Stalkers tbody tr.stalker-collaborator select {
+            background: radial-gradient(circle at 50% 0%, #3f6b4c 0, #18241c 80%);
+            border-color: #4fa86a;
+            box-shadow:
+                inset 0 0 0 1px #1b2b22,
                 0 0 0 1px rgba(0,0,0,0.8);
         }
 
@@ -1680,9 +1691,14 @@
         else if (value === 'War')     tr.classList.add('relation-war');
     }
 
+    // UPDATED: handle collaborator + wanted
     function updateStalkerRowStyle(tr, value) {
-        tr.classList.remove('stalker-wanted');
-        if (value === 'Wanted') tr.classList.add('stalker-wanted');
+        tr.classList.remove('stalker-wanted', 'stalker-collaborator');
+        if (value === 'Wanted') {
+            tr.classList.add('stalker-wanted');
+        } else if (value === 'Collaborator') {
+            tr.classList.add('stalker-collaborator');
+        }
     }
 
     function attachDeleteHandler(tr, labelFieldIndex = 0) {
@@ -1836,6 +1852,27 @@
         }
     }
 
+    // ---- NEW: helpers to pull faction names for Stalker status dropdown ----
+    function getFactionNames() {
+        const relData = sheetCache.Relations;
+        if (!relData || !relData.length) return [];
+        // Column 0 of Relations = Faction name
+        return relData
+            .map(row => row[0])
+            .filter(name => typeof name === 'string' && name.trim() !== '');
+    }
+
+    function buildStalkerStatusOptions(selectedValue) {
+        const baseOptions = ['Collaborator', 'Wanted'];
+        const factions = getFactionNames();
+        const all = baseOptions.concat(factions);
+        return all.map(opt => {
+            const sel = (opt === selectedValue) ? 'selected' : '';
+            return `<option ${sel}>${opt}</option>`;
+        }).join('');
+    }
+    // -----------------------------------------------------------------------
+
     function renderRow(rowData = null) {
         const body = document.querySelector(`#table-${currentTab} tbody`);
         const tr = document.createElement('tr');
@@ -1904,17 +1941,24 @@
         } else if (currentTab === "Stalkers") {
             const data = rowData || ["", "Collaborator", "", "0"];
             const alias = data[0] || "";
-            let status = (data[1] === "Wanted") ? "Wanted" : "Collaborator";
+            let status = data[1] || "Collaborator";
             const task = data[2] || "";
             let rep = parseInt(data[3], 10);
             if (isNaN(rep)) rep = 0;
+
+            // Keep existing status if it's a faction name, otherwise normalise to Collaborator/Wanted
+            const factions = getFactionNames();
+            if (status !== "Collaborator" && status !== "Wanted" && !factions.includes(status)) {
+                status = "Collaborator";
+            }
+
+            const statusOptionsHtml = buildStalkerStatusOptions(status);
 
             tr.innerHTML = `
                 <td><input type="text" placeholder="ALIAS" value="${alias}"></td>
                 <td>
                     <select class="stalker-status">
-                        <option ${status==='Collaborator'?'selected':''}>Collaborator</option>
-                        <option ${status==='Wanted'?'selected':''}>Wanted</option>
+                        ${statusOptionsHtml}
                     </select>
                 </td>
                 <td><input type="text" placeholder="TASK" value="${task}"></td>
@@ -2281,6 +2325,19 @@
         boot();
     }
 
+    // Prefetch Relations data so faction names are available for Stalker status dropdowns
+    async function prefetchRelations() {
+        if (sheetCache.Relations) return;
+        try {
+            const res = await fetch(`${UPLINK_URL}?sheet=Relations`);
+            const payload = await res.json();
+            sheetCache.Relations = payload.rows || [];
+            sheetRevision.Relations = payload.revision ?? null;
+        } catch (e) {
+            console.error('Prefetch Relations failed', e);
+        }
+    }
+
     window.addEventListener('load', () => {
         initClock();
         initSignalBars();
@@ -2288,6 +2345,7 @@
         scheduleGlitch();
         scheduleBacklightFlicker();
         updateAccessIndicator();
+        prefetchRelations(); // make sure factions are ready for Stalker status options
 
         const startBtn = document.getElementById('start-btn');
         if (startBtn) {
